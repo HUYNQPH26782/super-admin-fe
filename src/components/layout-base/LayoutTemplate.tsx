@@ -8,11 +8,12 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Button, Dropdown, Layout, Menu, Select } from "antd";
 import { useTranslation } from "react-i18next";
-import { LANGUAGES } from "../constants";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { GetMenu, SetMenu } from "../app/reducers/Menu/Menu.reducer";
-import { MenuAPI } from "../api/menu.api";
-import type { IMenu } from "../interface/Menu.interface";
+import { LANGUAGES } from "../../interface/constants/languages";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { GetMenu, SetMenu } from "../../app/reducers/Menu/Menu.reducer";
+import { MenuAPI } from "../../api/menu.api";
+import type { IMenu } from "../../interface/Menu.interface";
+import { Link } from "react-router-dom";
 
 const { Header, Content, Sider } = Layout;
 
@@ -36,12 +37,25 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
     i18n.changeLanguage(langCode, undefined);
   };
 
-  function buildMenuTree(menuList: IMenu[]) :MenuItem[] {
+  function buildMenuTree(menuList: IMenu[]): MenuItem[] {
     return menuList.map((el) => {
       if (el.childId && el.childId.length > 0) {
-        return getItem(el.name, el.id + "", buildMenuTree(el.childId));
+        return getItem(
+          <Link to={el.url ?? ""}>
+            {/* { el.} */}
+            <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
+          </Link>,
+          el.url + "",
+          buildMenuTree(el.childId)
+        );
       }
-      return getItem(el.name, el.id + "");
+      return getItem(
+        <Link to={el.url ?? ""}>
+          {/* { el.} */}
+          <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
+        </Link>,
+        el.url + ""
+      );
     });
   }
 

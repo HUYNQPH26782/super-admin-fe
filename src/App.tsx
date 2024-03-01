@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import LayoutTemplate from "./components/LayoutTemplate";
-import TableTemplate, { type TableParams } from "./components/TableTemplate";
+import LayoutTemplate from "./components/layout-base/LayoutTemplate";
+import TableTemplate, { type TableParams } from "./components/table-base/TableTemplate";
 import type { TableProps } from "antd";
 import qs from "qs";
-import InputTextTemplate from "./components/InputTextTemplate";
+import InputTextTemplate from "./components/input-base/InputTextTemplate";
 import { useTranslation } from "react-i18next";
+import RouterRender from "./router/Router";
 
 type ColumnsType<T> = TableProps<T>["columns"];
 
@@ -51,7 +52,7 @@ const getRandomuserParams = (params: TableParams) => ({
   ...params,
 });
 function App() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const [data, setData] = useState<DataType[]>();
   const [loading, setLoading] = useState(false);
 
@@ -107,7 +108,8 @@ function App() {
 
   return (
     <div className="App">
-      <LayoutTemplate title={t('about')}>
+      <RouterRender></RouterRender>
+      {/* <LayoutTemplate title={t('about')}>
         <div>
           <InputTextTemplate value={t('about')}></InputTextTemplate>
           <TableTemplate
@@ -118,7 +120,7 @@ function App() {
             loading={loading}
             handleTableChange={handleTableChange}></TableTemplate>
         </div>
-      </LayoutTemplate>
+      </LayoutTemplate> */}
     </div>
   );
 }

@@ -3,6 +3,10 @@ export const vi = {
       "label": "Select another language!",
       "about": "tiếng pháp nha",
       "home": "Home",
-      "user": "My name is: {{name}}"
+      "user": "My name is: {{name}}",
+      titleTable: "Danh sách",
+      rolesManagement: {
+        title: "Quản lý phân quyền"
+      }
   };
   

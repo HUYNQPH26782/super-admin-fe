@@ -1,7 +1,9 @@
+import TableTemplate from "../../components/table-base/TableTemplate";
+
 function SystemManagementIndex() {
   return (
     <>
-      <span>system management</span>
+      <TableTemplate></TableTemplate>
     </>
   );
 }

@@ -6,7 +6,12 @@ export const vi = {
       "user": "My name is: {{name}}",
       titleTable: "Danh sách",
       rolesManagement: {
-        title: "Quản lý phân quyền"
+        title: "Quản lý phân quyền",
+        breakcrumb: "Phân quyền"
+      },
+      systemManagement: {
+        title: "Quản lý hệ thống",
+        breakcrumb: "Hệ thống"
       }
   };
   

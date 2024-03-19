@@ -7,6 +7,7 @@ import qs from "qs";
 import InputTextTemplate from "./components/input-base/InputTextTemplate";
 import { useTranslation } from "react-i18next";
 import RouterRender from "./router/Router";
+import 'animate.css';
 
 type ColumnsType<T> = TableProps<T>["columns"];
 

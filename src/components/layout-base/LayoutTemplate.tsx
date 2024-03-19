@@ -14,11 +14,22 @@ import { GetMenu, SetMenu } from "../../app/reducers/Menu/Menu.reducer";
 import { MenuAPI } from "../../api/menu.api";
 import type { IMenu } from "../../interface/Menu.interface";
 import { Link } from "react-router-dom";
+import { BreakcrumbType } from "../../interface/constants/router/RouterType.type";
+import 'animate.css';
 
 const { Header, Content, Sider } = Layout;
+interface LayoutTemplateProps {
+  children: React.ReactNode;
+  title: string;
+  breakcrumb: BreakcrumbType[];
+}
 
 type MenuItem = Required<MenuProps>["items"][number];
-const LayoutTemplate: React.FC<any> = ({ children, title }) => {
+const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
+  children,
+  title,
+  breakcrumb,
+}) => {
   const data = useAppSelector(GetMenu);
   const dispatch = useAppDispatch();
 
@@ -93,7 +104,8 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.antgroup.com">
+          href="https://www.antgroup.com"
+        >
           1st menu item
         </a>
       ),
@@ -117,7 +129,8 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.luohanacademy.com">
+          href="https://www.luohanacademy.com"
+        >
           3rd menu item
         </a>
       ),
@@ -138,7 +151,8 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
           top: 0,
           bottom: 0,
           background: "#ffff",
-        }}>
+        }}
+      >
         <div>
           <img
             src="https://img.pikbest.com/origin/09/28/36/57MpIkbEsTcKf.png!w700wp"
@@ -156,7 +170,8 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
           collapsed
             ? { marginLeft: 80, transition: "all 0.2s,background 0s" }
             : { marginLeft: 200, transition: "all 0.2s" }
-        }>
+        }
+      >
         <Header
           style={{
             padding: 0,
@@ -169,7 +184,8 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
             height: 45,
             alignItems: "center",
             justifyContent: "space-between",
-          }}>
+          }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -183,26 +199,26 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
           />
           <div style={{ marginRight: 15 }}>
             <span>
-              <Dropdown
-                menu={{ items }}
-                placement="bottomRight">
+              <Dropdown menu={{ items }} placement="bottomRight">
                 <CaretDownOutlined />
               </Dropdown>
             </span>
           </div>
         </Header>
 
-        <Content
+        <Content className={`animate__animated animate__bounceInRight`}
           style={{
             margin: "20px 20px",
-          }}>
+          }}
+        >
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               marginBottom: 20,
-            }}>
+            }}
+          >
             <h2
               style={{
                 display: "flex",
@@ -210,23 +226,36 @@ const LayoutTemplate: React.FC<any> = ({ children, title }) => {
                 marginTop: 0,
                 fontWeight: 700,
                 fontSize: 22,
-              }}>
+              }}
+            >
               <img
                 style={{ width: 35, marginRight: 8 }}
                 src="https://static.xx.fbcdn.net/images/emoji.php/v9/tb2/1.5/30/1f41f.png"
                 alt=""
               />
-              {title}
+              {t(title)}
             </h2>
             <Breadcrumb>
               <Breadcrumb.Item>
-                <HomeOutlined />
+                <Link to={"/"}>
+                  <HomeOutlined />
+                </Link>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
+              {breakcrumb.map((el) => {
+                return (
+                  <>
+                    <Breadcrumb.Item key={el.name}>
+                      <Link to={el.path} key={el.name}>
+                        {t(el.name)}
+                      </Link>
+                    </Breadcrumb.Item>
+                  </>
+                );
+              })}
             </Breadcrumb>
           </div>
-          {children}
+          <div>
+          {children}</div>
         </Content>
       </Layout>
     </Layout>

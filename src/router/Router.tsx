@@ -35,16 +35,16 @@ function RouterRender() {
             />
             {Object.entries(ROUTER_BASE).map(([key, router]) => (
               React.createElement(Route, { path: router.path, key: router.name, element: (<>
-              {router.type == TYPE_MANAGEMENT.AUTH_GUARD ? <>
+              {router.type === TYPE_MANAGEMENT.AUTH_GUARD ? <>
                 <AuthGuard>
-                  <LayoutTemplate>
-                    { router.component }
+                  <LayoutTemplate key={key} title={router.title} breakcrumb={router.breakcrumb}>
+                    { React.createElement(router.component) }
                   </LayoutTemplate>
                 </AuthGuard>
               </> : <>
                 <GuestGuard>
-                  <LayoutTemplate>
-                    { router.component }
+                  <LayoutTemplate key={key} title={router.title} breakcrumb={router.breakcrumb}>
+                    { React.createElement(router.component) }
                   </LayoutTemplate>
                 </GuestGuard>
               </>}

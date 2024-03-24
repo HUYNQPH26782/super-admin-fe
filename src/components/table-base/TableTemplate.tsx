@@ -29,7 +29,7 @@ const TableTemplate: React.FC<any> = ({
   return (
     <>
       <Card
-        title={title}
+        title={<h1 className="text-lg">{title}</h1>}
         extra={active}>
         <Table
           size="small"

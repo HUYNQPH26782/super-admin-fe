@@ -8,17 +8,19 @@ import { I18nextProvider } from "react-i18next";
 
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { NotificationProvider } from "./components/notification-base/NotificationTemplate";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  
   <Provider store={store}>
     <I18nextProvider i18n={i18n}>
-      <App />
+      <NotificationProvider>
+        <App />
+      </NotificationProvider>
     </I18nextProvider>
-    </Provider>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

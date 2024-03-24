@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IRoles } from "../../../interface/response/systemManagement/Roles.interface";
+import { IRoles } from "../../../interface/response/systemManagement/roles/Roles.interface";
 import { RootState } from "../../store";
 
 const initialState: IRoles[] = [];

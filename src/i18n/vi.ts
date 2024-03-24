@@ -4,6 +4,15 @@ export const vi = {
       "about": "tiếng pháp nha",
       "home": "Home",
       "user": "My name is: {{name}}",
+      common: {
+        button: {
+          create: "Thêm",
+          update: "Sửa",
+          delete: "Xóa",
+          goToUpdate: "Đi tới màn sửa",
+          back: "Quay lại"
+        },
+      },
       titleTable: "Danh sách",
       rolesManagement: {
         title: "Quản lý phân quyền",

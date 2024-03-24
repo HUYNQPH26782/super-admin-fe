@@ -1,39 +1,43 @@
-/* .App {
-  text-align: center;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+@font-face {
+  font-family: "mukata";
+  src: url("./assets/font/Mukta/Mukta-Regular.ttf");
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Scoll bar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: rgb(209 213 219);
+  border-radius: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(243 244 246);
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
 

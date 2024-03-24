@@ -1,4 +1,4 @@
-import { IBase } from "../../Base.interface";
+import { IBase } from "../../../Base.interface";
 
 export interface IRoles extends IBase {
     id?: number;

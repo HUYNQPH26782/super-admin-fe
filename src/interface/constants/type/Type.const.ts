@@ -5,5 +5,7 @@ export const TYPE_MANAGEMENT = {
   MODE_CREATE: "modeCreate",
   MODE_UPDATE: "modeUpdate",
   MODE_DETAIL: "modeDetail",
-  MODA_DELETE: "modaeDelete"
+  MODE_DELETE: "modaeDelete",
 };
+
+export type NotificationType = 'success' | 'info' | 'warning' | 'error';

@@ -27,6 +27,10 @@ export const vi = {
       systemManagement: {
         title: "Quản lý hệ thống",
         breakcrumb: "Hệ thống"
+      },
+      objectsManagement: {
+        title: "Quản lý chức năng",
+        breakcrumb: "Chức năng"
       }
   };
   

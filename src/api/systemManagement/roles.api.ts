@@ -1,4 +1,4 @@
-import { Method, request } from "../helper/request.helper";
+import { Method, request } from "../../helper/request.helper";
 
 export class RolesAPI {
   static readonly COMPONENT_NAME: string = "super-admin/roles";

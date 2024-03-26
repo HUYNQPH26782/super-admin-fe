@@ -1,15 +1,15 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import ProductReducer from "./reducers/Product/Product.reducer";
-import MenuReducer from "./reducers/Menu/Menu.reducer";
-import LoadingReducer from "./reducers/Loading/Loading.reducer";
-import RolesReducer from "./reducers/Roles/Roles.reducer";
+import MenuReducer from "./reducers/common/Menu/Menu.reducer";
+import LoadingReducer from "./reducers/common/Loading/Loading.reducer";
+import RolesReducer from "./reducers/systemManagement/Roles/Roles.reducer";
+import ObjectsReducer from "./reducers/systemManagement/Objects/Objects.reducer";
 
 export const store = configureStore({
   reducer: {
-    product: ProductReducer,
     menu: MenuReducer,
     loading: LoadingReducer,
-    roles: RolesReducer
+    roles: RolesReducer,
+    objects: ObjectsReducer
   },
 });
 

@@ -37,7 +37,7 @@ const TableTemplate: React.FC<any> = ({
           expandable={expandable}
           scroll={{ x: "auto" }}
           columns={columns}
-          rowKey={(record) => record.login.uuid}
+          rowKey={(record) => record.id}
           dataSource={data}
           pagination={tableParams.pagination}
           loading={loading}

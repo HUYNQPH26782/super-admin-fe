@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
-import type { IMenu } from "../../../interface/Menu.interface";
+import { RootState } from "../../../store";
+import type { IMenu } from "../../../../interface/Menu.interface";
 
 const initialState: IMenu[] = [];
 

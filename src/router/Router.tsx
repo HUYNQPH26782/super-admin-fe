@@ -50,26 +50,6 @@ function RouterRender() {
               </>}
               </>)})
             ))}
-            {/* <Route
-              path={ROUTER_BASE.systemManagement.path}
-              element={
-                <AuthGuard>
-                  <LayoutTemplate>
-                    <SystemManagementIndex />
-                  </LayoutTemplate>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path={ROUTER_BASE.roleManagement.path}
-              element={
-                <AuthGuard>
-                  <LayoutTemplate>
-                    <RolesManagementIndex />
-                  </LayoutTemplate>
-                </AuthGuard>
-              }
-            /> */}
           </Routes>
         </Suspense>
       </BrowserRouter>

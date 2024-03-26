@@ -12,6 +12,12 @@ export const vi = {
           goToUpdate: "Đi tới màn sửa",
           back: "Quay lại"
         },
+        checkbox: {
+          checkedAll: 'Chọn tất cả'
+        },
+        radiobox: {
+          radioboxAll: 'Lựa chọn'
+        }
       },
       titleTable: "Danh sách",
       rolesManagement: {

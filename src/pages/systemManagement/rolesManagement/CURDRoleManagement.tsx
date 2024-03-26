@@ -3,7 +3,7 @@ import FormFooterTemplate from "../../../components/form-base/FormFooterTemplate
 import FormTemplate from "../../../components/form-base/FormTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import ButtonBase from "../../../components/button-base/ButtonBase";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
@@ -11,6 +11,10 @@ import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
 import { useState } from "react";
 import ModalTemplate from "../../../components/modal-base/ModalTemplate";
+import { Input } from "antd";
+import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
+import ListCheckboxTemplate from "../../../components/input-base/ListCheckboxTemplate";
+import ListRadioboxTemplate from "../../../components/input-base/ListRadioboxTemplate";
 
 enum GenderEnum {
   female = "female",
@@ -20,23 +24,22 @@ enum GenderEnum {
 
 interface IFormInput {
   firstName: string;
+  second: string;
   gender: GenderEnum;
 }
 
 function CRUDRolesManagement() {
   const navigate = useNavigate();
   const { openNotification } = useNotification();
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<IFormInput>({
+  const { control, handleSubmit, getValues } = useForm({
     defaultValues: {
-      firstName: "Huynq test",
+      firstName: "aaaaaaaaa",
+      lastName: 1111,
+      iceCreamType: {},
+      youLike: ["Apple", "Orange"],
+      gender: 1
     },
-  });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(errors);
+  })
 
   const back = () => {
     navigate(ROUTER_BASE.roleManagement.path);
@@ -48,6 +51,8 @@ function CRUDRolesManagement() {
       "Notification Title",
       "This is the content of the notification."
     );
+    console.log(getValues());
+    
   };
 
   // Modal
@@ -65,30 +70,57 @@ function CRUDRolesManagement() {
     setIsModalOpen(false);
   };
 
+  const options = [
+    { value: 'jack', label: 'Jack' },
+    { value: 'lucy', label: 'Lucy' },
+    { value: 'Yiminghe', label: 'yiminghe' },
+    { value: 'disabled', label: 'Disabled', disabled: true },
+  ]
+
+  const optionsCheck = ["Apple", "Pear", "Orange"];
+
+  const optionRadio = [
+    {
+      value: 1,
+      label: "Nam"
+    },
+    {
+      value: 2,
+      label: "Nữ"
+    },
+    {
+      value: 3,
+      label: "Khác"
+    }
+  ]
+
   return (
     <>
       <CardLayoutTemplate title="[Thêm mới phân quyền]">
         {/* form crud */}
         <FormTemplate contentSize={"70"} labelSize={"30"}>
+
           {/* content form crud */}
-          <FormChildTemplate title={"Jane Smith"} required={true}>
-            <InputTextTemplate></InputTextTemplate>
+          <FormChildTemplate title={"First Name"} required={true}>
+            <InputTextTemplate name="firstName" control={control} />
           </FormChildTemplate>
-          <FormChildTemplate title={"Jane Smith"} required={true}>
-            <InputTextTemplate></InputTextTemplate>
+
+          <FormChildTemplate title={"Last Name"} required={true}>
+            <InputTextTemplate type={"number"} name="lastName" control={control} />
           </FormChildTemplate>
-          <FormChildTemplate title={"Jane Smith"} required={true}>
-            <InputTextTemplate></InputTextTemplate>
+
+          <FormChildTemplate title={"Ice cream type"} required={true}>
+            <SelectBoxTemplate name="iceCreamType" control={control} options={options} />
           </FormChildTemplate>
-          <FormChildTemplate title={"Jane Smith"} required={true}>
-            <InputTextTemplate></InputTextTemplate>
+
+          <FormChildTemplate title={"Do you like"} required={true}>
+            <ListCheckboxTemplate name="youLike" control={control} options={optionsCheck} isCheckAll={true} />
           </FormChildTemplate>
-          <FormChildTemplate title={"Jane Smith"} required={true}>
-            <InputTextTemplate></InputTextTemplate>
+
+          <FormChildTemplate title={"Do you like"} required={true}>
+            <ListRadioboxTemplate name="gender" control={control} options={optionRadio} isCheck={true} />
           </FormChildTemplate>
-          <FormChildTemplate title={"Jane Smith"} required={true}>
-            <InputTextTemplate></InputTextTemplate>
-          </FormChildTemplate>
+
           {/* footer form crud */}
           <FormFooterTemplate>
             <ButtonBase className="mx-2 btn btn__back" onClick={() => back()}>

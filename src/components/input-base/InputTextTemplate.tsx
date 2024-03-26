@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Input } from "antd";
+import { Controller } from "react-hook-form";
 
-const InputTextTemplate: React.FC<any> = ({ value, ...restProps }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-  useEffect(() => {
-    setInputValue(value);
-  }, []);
-
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    const inputValueTrim = event.target.value.trim();
-    setInputValue(inputValueTrim);
-  };
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
+const InputTextTemplate: React.FC<any> = ({ name, control, ...restProps }) => {
   return (
     <>
-      <Input
-        value={inputValue}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        {...restProps}
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => <Input {...field} {...restProps} />}
       />
     </>
   );

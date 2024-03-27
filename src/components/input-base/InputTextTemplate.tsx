@@ -8,7 +8,15 @@ const InputTextTemplate: React.FC<any> = ({ name, control, ...restProps }) => {
       <Controller
         name={name}
         control={control}
-        render={({ field }) => <Input {...field} {...restProps} />}
+        render={({ field }) => (
+          <Input
+            {...field}
+            {...restProps}
+            onBlur={(e) => {
+                field.onChange(field.value.trim());
+            }}
+          />
+        )}
       />
     </>
   );

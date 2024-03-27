@@ -138,7 +138,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   ];
 
   return (
-    <Layout className="h-screen">
+    <Layout>
       <Sider
         trigger={null}
         collapsible
@@ -206,10 +206,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
           </div>
         </Header>
 
-        <Content className={`animate__animated animate__bounceInRight`}
-          style={{
-            margin: "20px 20px",
-          }}
+        <Content className={`animate__animated animate__bounceInRight m-[20px] h-screen"`}
         >
           <div
             style={{

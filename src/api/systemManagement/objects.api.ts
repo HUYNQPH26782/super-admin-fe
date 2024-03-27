@@ -3,10 +3,11 @@ import { Method, request } from "../../helper/request.helper";
 export class ObjectsAPI {
   static readonly COMPONENT_NAME: string = "super-admin/object-management";
 
-  static getObjects = () => {
+  static getObjects = (filter:any) => {
     return request({
-      method: Method.GET,
-      url: `/${this.COMPONENT_NAME}`,
+      method: Method.POST,
+      url: `/${this.COMPONENT_NAME}/list`,
+      data: filter
     });
   };
 }

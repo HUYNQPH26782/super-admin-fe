@@ -1,6 +1,6 @@
-import FormChildTemplate from "../../../components/form-base/FormChildTemplate";
-import FormFooterTemplate from "../../../components/form-base/FormFooterTemplate";
-import FormTemplate from "../../../components/form-base/FormTemplate";
+import FormChildTemplate from "../../../components/form-base/form-basic-base/FormChildTemplate";
+import FormFooterTemplate from "../../../components/form-base/form-basic-base/FormFooterTemplate";
+import FormTemplate from "../../../components/form-base/form-basic-base/FormTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -42,7 +42,7 @@ function CRUDObjectManagement() {
   })
 
   const back = () => {
-    navigate(ROUTER_BASE.roleManagement.path);
+    navigate(ROUTER_BASE.objectManagement.path);
   };
 
   const onCreate = () => {

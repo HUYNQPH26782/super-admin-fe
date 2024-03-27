@@ -138,7 +138,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   ];
 
   return (
-    <Layout>
+    <Layout className="h-screen">
       <Sider
         trigger={null}
         collapsible

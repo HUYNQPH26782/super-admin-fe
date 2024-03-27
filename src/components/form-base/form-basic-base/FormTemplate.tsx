@@ -5,7 +5,7 @@ interface FormTemplateProps {
   contentSize: String;
   children: React.ReactNode;
 }
-const FormTemplate: React.FC<any> = ({
+const FormTemplate: React.FC<FormTemplateProps> = ({
   labelSize,
   contentSize,
   children

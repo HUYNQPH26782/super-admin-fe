@@ -9,12 +9,28 @@ import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
 import { GetObjects, SetObjects } from "../../../app/reducers/systemManagement/Objects/Objects.reducer";
 import { ObjectsRequest } from "../../../interface/request/systemManagement/objects/ObjectsRequest.interface";
+import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
+import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
+import { Button, Tooltip } from "antd";
+import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
+import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
+import { useForm } from "react-hook-form";
+import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
 
 function ObjectsManagementIndex() {
   const navigate = useNavigate();
   const data = useAppSelector(GetObjects);
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
+  
+  const { control, handleSubmit, getValues } = useForm({
+    defaultValues: {
+      code: "aaaaaaaaa",
+      name: "bbbbbbbb",
+      type: "ccccccccc"
+    },
+  })
+
   const [tableParams, setTableParams] = useState<ObjectsRequest>({
     code: "",
     name: "",
@@ -34,23 +50,64 @@ function ObjectsManagementIndex() {
   
   const columns = [
     {
-      title: 'Name',
+      title: t('common.rowNum'),
+      dataIndex: 'stt',
+      key: 'stt',
+      align: 'center',
+      showSorterTooltip: false
+    },
+    {
+      title: t('objectsManagement.table.name'),
       dataIndex: 'name',
       key: 'name',
+      sorter: true,
+      showSorterTooltip: false,
     },
     {
-      title: 'Code',
+      title: t('objectsManagement.table.code'),
       dataIndex: 'code',
       key: 'code',
+      sorter: true,
+      showSorterTooltip: false
     },
     {
-      title: 'Type',
+      title: t('objectsManagement.table.type'),
       dataIndex: 'type',
       key: 'type',
+      sorter: true,
+      showSorterTooltip: false,
+      render: (data:string) => `${t(data)}`,
     },
   ];
+
+  const options = [
+    { value: 'jack', label: 'Jack' },
+    { value: 'lucy', label: 'Lucy' },
+    { value: 'Yiminghe', label: 'yiminghe' },
+    { value: 'disabled', label: 'Disabled', disabled: true },
+  ]
+
   return (
     <>
+      <CardLayoutTemplate title={t('titleSearch')} className="mb-5">
+        <FormSearchTemplate footer={
+          <><Button>Clear</Button><Button>Tìm kiếm</Button></>
+        }>
+
+          <FormSearchChildTemplate label={t('objectsManagement.table.name')}>
+            <InputTextTemplate control={control} name="name"></InputTextTemplate>
+          </FormSearchChildTemplate>
+
+          <FormSearchChildTemplate label={t('objectsManagement.table.code')}>
+            <InputTextTemplate control={control} name="code"></InputTextTemplate>
+          </FormSearchChildTemplate>
+
+          <FormSearchChildTemplate label={t('objectsManagement.table.type')}>
+            <SelectBoxTemplate className='w-full' name="iceCreamType" control={control} options={options} />
+          </FormSearchChildTemplate>
+
+        </FormSearchTemplate>
+      </CardLayoutTemplate>
       <TableTemplate
         title={t('titleTable')}
         active={

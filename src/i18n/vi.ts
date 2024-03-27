@@ -5,6 +5,7 @@ export const vi = {
       "home": "Home",
       "user": "My name is: {{name}}",
       common: {
+        rowNum: "#",
         button: {
           create: "Thêm",
           update: "Sửa",
@@ -19,7 +20,18 @@ export const vi = {
           radioboxAll: 'Lựa chọn'
         }
       },
+      base: {
+        common: {
+          code: {
+            object: {
+              menu: "Menu",
+              tool: "Tool"
+            }
+          }
+        }
+      },
       titleTable: "Danh sách",
+      titleSearch: "Tìm kiếm",
       rolesManagement: {
         title: "Quản lý phân quyền",
         breakcrumb: "Phân quyền"
@@ -30,7 +42,12 @@ export const vi = {
       },
       objectsManagement: {
         title: "Quản lý chức năng",
-        breakcrumb: "Chức năng"
+        breakcrumb: "Chức năng",
+        table: {
+          name: "Tên chắc năng",
+          code: "Mã chức năng",
+          type: "Loại chức năng"
+        }
       }
   };
   

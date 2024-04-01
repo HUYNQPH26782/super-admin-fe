@@ -44,7 +44,7 @@ export const vi = {
         title: "Quản lý chức năng",
         breakcrumb: "Chức năng",
         table: {
-          name: "Tên chắc năng",
+          name: "Tên chức năng",
           code: "Mã chức năng",
           type: "Loại chức năng"
         }

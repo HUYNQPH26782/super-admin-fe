@@ -1,6 +1,4 @@
-import { TableParams } from "../../../../components/table-base/TableTemplate";
-
-export interface RolesRequest extends TableParams {
+export interface RolesRequest {
     code: string,
     name: string
 }

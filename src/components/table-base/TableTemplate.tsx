@@ -1,31 +1,40 @@
-import React from "react";
-import { Card, Table } from "antd";
-import type { GetProp, TableProps } from "antd";
+import { Card, Pagination, Select, Table } from "antd";
+import type { PaginationProps, TablePaginationConfig, TableProps } from "antd";
+import { useEffect, useState } from "react";
+const { Option } = Select;
 
-type TablePaginationConfig = Exclude<
-  GetProp<TableProps, "pagination">,
-  boolean
->;
-
-export interface TableParams {
-  pagination?: TablePaginationConfig;
-  sortField?: string;
-  sortOrder?: string;
-  filters?: Parameters<GetProp<TableProps, "onChange">>[1];
+interface TableTemplateProps extends TableProps {
+  pagination: TablePaginationConfig;
+  dataSource: Array<any>;
+  columns: Array<any>;
+  active: any;
+  title: any;
+  onChange: (
+    pagination: TablePaginationConfig,
+    filters: any,
+    sorter: any,
+    extra: any
+  ) => void;
 }
 
-const TableTemplate: React.FC<any> = ({
-  columns,
-  data,
-  tableParams,
+function TableTemplate({
   loading,
-  handleTableChange,
   rowSelection,
   expandable,
   active,
   title,
-  ...restProps
-}) => {
+  dataSource, columns, pagination, onChange, ...restProps
+}: TableTemplateProps) {
+  const [pageSize, setPageSize] = useState<number>(20);
+
+  const handlePageSizeChange = (value: number) => {
+    setPageSize(value);
+  };
+
+  const handlePaginationChange = (page: number) => {
+    onChange({ ...pagination, current: page }, null, null, null);
+  };
+
   return (
     <>
       <Card
@@ -33,17 +42,28 @@ const TableTemplate: React.FC<any> = ({
         extra={active}>
         <Table
           size="small"
-          rowSelection={rowSelection}
-          expandable={expandable}
           scroll={{ x: "auto" }}
+          dataSource={dataSource}
           columns={columns}
-          rowKey={(record) => record.id}
-          dataSource={data}
-          pagination={tableParams.pagination}
-          loading={loading}
-          onChange={handleTableChange}
+          pagination={false}
+          onChange={onChange}
           {...restProps}
         />
+        <Pagination
+          total={85}
+          showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          pageSize={pageSize}
+          current={pagination.current}
+          onChange={handlePaginationChange}
+          showSizeChanger={false}
+        />
+        
+        <Select value={pageSize} onChange={handlePageSizeChange}>
+          <Option value={10}>10</Option>
+          <Option value={20}>20</Option>
+          <Option value={30}>30</Option>
+          {/* Thêm các lựa chọn kích thước trang khác nếu cần */}
+        </Select>
       </Card>
     </>
   );

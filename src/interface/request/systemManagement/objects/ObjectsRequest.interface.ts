@@ -1,6 +1,5 @@
-import { TableParams } from "../../../../components/table-base/TableTemplate";
 
-export interface ObjectsRequest extends TableParams {
+export interface ObjectsRequest {
     code: string,
     name: string
 }

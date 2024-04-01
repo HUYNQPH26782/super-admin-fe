@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import TableTemplate, { TableParams } from "../../../components/table-base/TableTemplate";
+import TableTemplate from "../../../components/table-base/TableTemplate";
 import { t } from "i18next";
 import ButtonBase from "../../../components/button-base/ButtonBase";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import { GetObjects, SetObjects } from "../../../app/reducers/systemManagement/O
 import { ObjectsRequest } from "../../../interface/request/systemManagement/objects/ObjectsRequest.interface";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
-import { Button, TableProps, Tooltip } from "antd";
+import { Button, TablePaginationConfig, TableProps, Tooltip } from "antd";
 import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import { useForm } from "react-hook-form";
@@ -28,7 +28,9 @@ function ObjectsManagementIndex() {
       code: "",
       name: "",
       type: "",
-      pagination: {
+      pagination: { 
+        current: 1,
+        pageSize: 20 
       },
     },
   })
@@ -45,6 +47,14 @@ function ObjectsManagementIndex() {
       setLoading(false)
     });
   }
+
+  const handlePageChange = (
+    pagination: TablePaginationConfig,
+    sorter: any,
+    extra: any
+  ) => {
+    console.log(pagination, sorter, extra);
+  };
   
   useEffect(() => {
     console.log(getValues());
@@ -57,8 +67,8 @@ function ObjectsManagementIndex() {
   const columns = [
     {
       title: t('common.rowNum'),
-      dataIndex: 'stt',
-      key: 'stt',
+      dataIndex: 'rowNumber',
+      key: 'rowNumber',
       align: 'center',
       showSorterTooltip: false
     },
@@ -68,6 +78,7 @@ function ObjectsManagementIndex() {
       key: 'name',
       sorter: true,
       showSorterTooltip: false,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: t('objectsManagement.table.code'),
@@ -92,12 +103,6 @@ function ObjectsManagementIndex() {
     { value: 'Yiminghe', label: 'yiminghe' },
     { value: 'disabled', label: 'Disabled', disabled: true },
   ]
-
-
-  const handleTableChange = (sortField: any) => {
-    console.log(sortField);
-    
-  };
 
   return (
     <>
@@ -127,10 +132,10 @@ function ObjectsManagementIndex() {
             <ButtonBase onClick={() => navigate(`${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_CREATE}/0`)} className='mx-2 btn btn__create'>{t('common.button.create')}</ButtonBase>
           </>
         }
-        handleTableChange={handleTableChange}
+        onChange={handlePageChange}
         columns={columns}
-        data={data}
-        tableParams={getValues}
+        dataSource={data}
+        pagination={getValues().pagination}
         loading={loading}></TableTemplate>
     </>
   );

@@ -15,14 +15,14 @@ function RolesManagementIndex() {
   const data = useAppSelector(GetRoles);
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
-  const [tableParams, setTableParams] = useState<RolesRequest>({
-    code: "",
-    name: "",
-    pagination: {
-      current: 1,
-      pageSize: 10,
-    }
-  });
+  // const [tableParams, setTableParams] = useState<RolesRequest>({
+  //   code: "",
+  //   name: "",
+  //   pagination: {
+  //     current: 1,
+  //     pageSize: 10,
+  //   }
+  // });
   useEffect(() => {
     RolesAPI.getRoles().then((result: any) => {
       dispatch(SetRoles(result.data.data.data));
@@ -49,7 +49,7 @@ function RolesManagementIndex() {
   ];
   return (
     <>
-      <TableTemplate
+      {/* <TableTemplate
         title={t('titleTable')}
         active={
           <>
@@ -59,7 +59,7 @@ function RolesManagementIndex() {
         columns={columns}
         data={data}
         tableParams={tableParams}
-        loading={loading}></TableTemplate>
+        loading={loading}></TableTemplate> */}
     </>
   );
 }

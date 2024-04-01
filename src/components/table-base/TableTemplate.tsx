@@ -1,10 +1,16 @@
 import { Card, Pagination, Select, Table } from "antd";
-import type { PaginationProps, TablePaginationConfig, TableProps } from "antd";
-import { useEffect, useState } from "react";
+import type { TablePaginationConfig, TableProps } from "antd";
+import { t } from "i18next";
+import { useState } from "react";
 const { Option } = Select;
 
+interface PaginationProps {
+  current: number;
+  size: number;
+  total: number;
+}
 interface TableTemplateProps extends TableProps {
-  pagination: TablePaginationConfig;
+  paginationProp: PaginationProps;
   dataSource: Array<any>;
   columns: Array<any>;
   active: any;
@@ -15,6 +21,8 @@ interface TableTemplateProps extends TableProps {
     sorter: any,
     extra: any
   ) => void;
+  handlePageSizeChange: (value: number) => void;
+  handlePaginationChange: (page: number) => void;
 }
 
 function TableTemplate({
@@ -23,16 +31,21 @@ function TableTemplate({
   expandable,
   active,
   title,
-  dataSource, columns, pagination, onChange, ...restProps
+  dataSource, columns, paginationProp, onChange, handlePageSizeChange, handlePaginationChange, ...restProps
 }: TableTemplateProps) {
-  const [pageSize, setPageSize] = useState<number>(20);
+  const [pageSize, setPageSize] = useState<number>(paginationProp.size);
+  const [current, setCurrent] = useState<number>(paginationProp.size);
 
-  const handlePageSizeChange = (value: number) => {
+  const sizeChange = (value: number) => {
     setPageSize(value);
+    handlePageSizeChange(value);
   };
 
-  const handlePaginationChange = (page: number) => {
-    onChange({ ...pagination, current: page }, null, null, null);
+  const paginationChange = (page: number) => {
+    setCurrent(page);
+    console.log(page);
+    
+    handlePaginationChange(page);
   };
 
   return (
@@ -49,21 +62,25 @@ function TableTemplate({
           onChange={onChange}
           {...restProps}
         />
-        <Pagination
-          total={85}
-          showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-          pageSize={pageSize}
-          current={pagination.current}
-          onChange={handlePaginationChange}
-          showSizeChanger={false}
-        />
-        
-        <Select value={pageSize} onChange={handlePageSizeChange}>
-          <Option value={10}>10</Option>
-          <Option value={20}>20</Option>
-          <Option value={30}>30</Option>
-          {/* Thêm các lựa chọn kích thước trang khác nếu cần */}
-        </Select>
+        <div className="flex justify-center mt-5">
+          <Pagination
+            className="mr-3"
+            total={paginationProp.total}
+            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+            pageSize={pageSize}
+            current={current}
+            onChange={paginationChange}
+            showSizeChanger={false}
+          />
+          
+          <Select value={pageSize} onChange={sizeChange}>
+            <Option value={10}>10 {t('common.pagination.page')}</Option>
+            <Option value={20}>20 {t('common.pagination.page')}</Option>
+            <Option value={30}>30 {t('common.pagination.page')}</Option>
+            <Option value={50}>50 {t('common.pagination.page')}</Option>
+            <Option value={100}>100 {t('common.pagination.page')}</Option>
+          </Select>
+        </div>
       </Card>
     </>
   );

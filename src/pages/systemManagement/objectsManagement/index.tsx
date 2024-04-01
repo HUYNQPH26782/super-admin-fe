@@ -23,29 +23,49 @@ function ObjectsManagementIndex() {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   
-  const { control, handleSubmit, getValues, reset } = useForm({
+  const { control, handleSubmit, getValues, reset, setValue } = useForm({
     defaultValues: {
       code: "",
       name: "",
       type: "",
       pagination: { 
-        current: 1,
-        pageSize: 20 
+        current: TYPE_MANAGEMENT.DEFAULT_CURRENT,
+        size: TYPE_MANAGEMENT.DEFAULT_SIZE,
+        total: TYPE_MANAGEMENT.DEFAULT_TOTAL,
       },
+      sortField: null,
+      sortType: ""
     },
   })
 
-  const fetchData = () => {
-    
-    setLoading(true)
+  const handlePageSizeChange = (value: number) => {
+    setValue("pagination.size", value);
+
     console.log(getValues());
+    fetchData();
     
+    // Add logic to handle page size change
+  };
+
+  const handlePaginationChange = (page: number) => {
+    console.log(page);
+    
+    setValue("pagination.current", page - 1);
+    console.log(getValues());
+
+    fetchData();
+    // Add logic to handle page change
+  };
+  const fetchData = () => {
+    setLoading(true)
     ObjectsAPI.getObjects(getValues()).then((result: any) => {
       dispatch(SetObjects(result.data.data.data));
-      console.log(result.data.data);
-      
-      setLoading(false)
+      setValue("pagination.current", result.data.data.currentPage);
+      setValue("pagination.total", result.data.data.totalPages);
+    console.log(result.data.data.data);
+    setLoading(false)
     });
+    
   }
 
   const handlePageChange = (
@@ -53,16 +73,23 @@ function ObjectsManagementIndex() {
     sorter: any,
     extra: any
   ) => {
-    console.log(pagination, sorter, extra);
-  };
-  
-  useEffect(() => {
+    console.log(extra);
+    setValue("sortType", extra.order ? extra.order.slice(0, -3) : '');
+    setValue("sortField", extra.field);
     console.log(getValues());
-  }, [JSON.stringify(getValues())]);
+    fetchData()
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [dispatch]);
+    setLoading(true)
+    ObjectsAPI.getObjects({}).then((result: any) => {
+      dispatch(SetObjects(result.data.data.data));
+      setValue("pagination.current", result.data.data.currentPage);
+      setValue("pagination.total", result.data.data.totalPages);
+      
+      setLoading(false)
+    });
+  }, []);
   
   const columns = [
     {
@@ -70,7 +97,8 @@ function ObjectsManagementIndex() {
       dataIndex: 'rowNumber',
       key: 'rowNumber',
       align: 'center',
-      showSorterTooltip: false
+      showSorterTooltip: false,
+      render: (text: any, record: any, index: number) => getValues('pagination.current') * getValues('pagination.size') + index + 1,
     },
     {
       title: t('objectsManagement.table.name'),
@@ -133,9 +161,11 @@ function ObjectsManagementIndex() {
           </>
         }
         onChange={handlePageChange}
+        handlePageSizeChange={handlePageSizeChange}
+        handlePaginationChange={handlePaginationChange}
         columns={columns}
         dataSource={data}
-        pagination={getValues().pagination}
+        paginationProp={getValues().pagination}
         loading={loading}></TableTemplate>
     </>
   );

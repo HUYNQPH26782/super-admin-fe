@@ -18,6 +18,9 @@ export const vi = {
         },
         radiobox: {
           radioboxAll: 'Lựa chọn'
+        },
+        pagination: {
+          page: "/ trang"
         }
       },
       base: {

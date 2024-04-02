@@ -34,7 +34,7 @@ function TableTemplate({
   dataSource, columns, paginationProp, onChange, handlePageSizeChange, handlePaginationChange, ...restProps
 }: TableTemplateProps) {
   const [pageSize, setPageSize] = useState<number>(paginationProp.size);
-  const [current, setCurrent] = useState<number>(paginationProp.size);
+  const [current, setCurrent] = useState<number>(paginationProp.current);
 
   const sizeChange = (value: number) => {
     setPageSize(value);

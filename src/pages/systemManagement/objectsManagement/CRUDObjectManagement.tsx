@@ -9,15 +9,20 @@ import { useNavigate } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalTemplate from "../../../components/modal-base/ModalTemplate";
 import { ObjectsRequest } from "../../../interface/request/systemManagement/objects/ObjectsRequest.interface";
 import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
+import { CodeMngApi } from "../../../api/common/codeMng.api";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { GetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
 
 function CRUDObjectManagement() {
   const navigate = useNavigate();
   const { openNotification } = useNotification();
+  const codeMngData = useAppSelector(GetCodeMng);
+  const dispatch = useAppDispatch();
   const { control, getValues } = useForm<ObjectsRequest>({
     defaultValues: {
       isActive: 1,
@@ -52,6 +57,12 @@ function CRUDObjectManagement() {
     })
   };
 
+  useEffect(() => {
+    CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
+      console.log(res.data);
+    })
+  }, [])
+
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -66,30 +77,6 @@ function CRUDObjectManagement() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  const options = [
-    { value: "jack", label: "Jack" },
-    { value: "lucy", label: "Lucy" },
-    { value: "Yiminghe", label: "yiminghe" },
-    { value: "disabled", label: "Disabled", disabled: true },
-  ];
-
-  const optionsCheck = ["Apple", "Pear", "Orange"];
-
-  const optionRadio = [
-    {
-      value: 1,
-      label: "Nam",
-    },
-    {
-      value: 2,
-      label: "Nữ",
-    },
-    {
-      value: 3,
-      label: "Khác",
-    },
-  ];
 
   return (
     <>

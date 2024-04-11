@@ -12,9 +12,31 @@ export class ObjectsAPI {
     });
   };
 
+  static getMenuSelect = (id: string|number|undefined) => {
+    return request({
+      method: Method.GET,
+      url: `/${this.COMPONENT_NAME}/menu-parent?id=${id}`,
+    });
+  };
+
+  static getObjectDetail = (id: string|number) => {
+    return request({
+      method: Method.GET,
+      url: `/${this.COMPONENT_NAME}?id=${id}`,
+    });
+  }
+
   static addObject = (data:ObjectsRequest) => {
     return request({
       method: Method.POST,
+      url: `/${this.COMPONENT_NAME}`,
+      data: data
+    });
+  };
+  
+  static updateObject = (data:ObjectsRequest) => {
+    return request({
+      method: Method.PUT,
       url: `/${this.COMPONENT_NAME}`,
       data: data
     });

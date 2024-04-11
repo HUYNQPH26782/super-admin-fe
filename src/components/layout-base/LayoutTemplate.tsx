@@ -16,6 +16,7 @@ import type { IMenu } from "../../interface/Menu.interface";
 import { Link } from "react-router-dom";
 import { BreakcrumbType } from "../../interface/constants/router/RouterType.type";
 import 'animate.css';
+import FontAwesomeBase from "../font-awesome/FontAwesomeBase";
 
 const { Header, Content, Sider } = Layout;
 interface LayoutTemplateProps {
@@ -52,19 +53,34 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       if (el.childId && el.childId.length > 0) {
         return getItem(
           <Link to={el.url ?? ""}>
-            {/* { el.} */}
-            <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
+            <span style={{ marginLeft: 15, marginRight: 15 }}>
+              {el.name}
+            </span>
           </Link>,
           el.url + "",
-          buildMenuTree(el.childId)
+          buildMenuTree(el.childId),
+          <FontAwesomeBase iconName={el.icon ?? ""} />
+        );
+      }
+      if (el.parentId == null) {
+        return getItem(
+          <Link to={el.url ?? ""}>
+            <span style={{ marginLeft: 15, marginRight: 15 }}>
+              {el.name}
+            </span>
+          </Link>,
+          el.url + "",
+          undefined,
+          <FontAwesomeBase iconName={el.icon ?? ""} />
         );
       }
       return getItem(
         <Link to={el.url ?? ""}>
-          {/* { el.} */}
-          <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
+          <span style={{ marginLeft: 15, marginRight: 15 }}>
+            {el.name}
+          </span>
         </Link>,
-        el.url + ""
+        el.url + "",
       );
     });
   }
@@ -72,12 +88,14 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   function getItem(
     label: React.ReactNode,
     key: React.Key,
-    children?: MenuItem[]
+    children?: MenuItem[],
+    icon?: React.ReactNode
   ): MenuItem {
     return {
       key,
       children,
       label,
+      icon
     } as MenuItem;
   }
 
@@ -142,6 +160,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
         trigger={null}
         collapsible
         collapsed={collapsed}
+        className="shadow-md"
         style={{
           overflow: "auto",
           height: "100vh",
@@ -172,6 +191,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
         }
       >
         <Header
+          className="shadow-md"
           style={{
             padding: 0,
             background: "#ffff",
@@ -205,7 +225,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
           </div>
         </Header>
 
-        <Content className={`animate__animated animate__bounceInRight m-[20px] h-screen"`}
+        <Content className={`animate__animated animate__bounceInRight my-[30px] mx-[40px] h-screen"`}
         >
           <div
             style={{

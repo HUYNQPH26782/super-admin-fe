@@ -1,12 +1,14 @@
 import React from "react";
 import { Checkbox } from "antd";
 import { Controller } from "react-hook-form";
+import { TYPE_MANAGEMENT } from "../../interface/constants/type/Type.const";
 
 const CheckboxTemplate: React.FC<any> = ({
   name,
   control,
   value,
   label,
+  mode,
   ...restProps
 }) => {
   return (
@@ -17,7 +19,8 @@ const CheckboxTemplate: React.FC<any> = ({
         render={({ field }) => {
           return (
             <>
-              <Checkbox {...field} {...restProps}>
+              <Checkbox 
+                disabled={mode === TYPE_MANAGEMENT.MODE_DETAIL} {...field} {...restProps}>
                 {{ label }}
               </Checkbox>
             </>

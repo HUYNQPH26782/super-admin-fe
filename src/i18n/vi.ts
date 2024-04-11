@@ -59,6 +59,7 @@ export const vi = {
         title: "Quản lý chức năng",
         titleCreate: "[Tạo mới chức năng]",
         titleUpdate: "[Chỉnh sửa chức năng]",
+        titleDetail: "[Chi tiết chức năng]",
         breakcrumb: "Chức năng",
         createSuccess: "Tạo mới chức năng thành công",
         updateSuccess: "Chỉnh sửa chức năng thành công",

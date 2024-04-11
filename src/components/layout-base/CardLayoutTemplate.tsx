@@ -10,6 +10,7 @@ const CardLayoutTemplate: React.FC<any> = ({
   return (
     <>
       <Card
+        className="shadow-md"
         title={<h1 className="text-lg">{title}</h1>}
         {...restProps}
         extra={active}>

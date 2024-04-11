@@ -150,7 +150,7 @@ function ObjectsManagementIndex() {
 
   return (
     <>
-      <CardLayoutTemplate title={t("titleSearch")} className="mb-5">
+      <CardLayoutTemplate title={t("titleSearch")} className="mb-5 shadow-md">
         <FormSearchTemplate
           footer={
             <>

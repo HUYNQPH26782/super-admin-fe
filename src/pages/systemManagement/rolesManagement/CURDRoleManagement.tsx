@@ -156,7 +156,7 @@ function CRUDRolesManagement() {
             </select>
             <button  onClick={handleSubmit(onSubmit)} >click</button> */}
 
-        <ModalTemplate
+        {/* <ModalTemplate
           title="Basic Modal"
           visible={isModalOpen}
           onClose={handleCancel}
@@ -165,7 +165,7 @@ function CRUDRolesManagement() {
           <p>Some contents...</p>
           <p>Some contents...</p>
           <p>Some contents...</p>
-        </ModalTemplate>
+        </ModalTemplate> */}
       </CardLayoutTemplate>
     </>
   );

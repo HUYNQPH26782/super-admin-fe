@@ -49,6 +49,7 @@ function TableTemplate({
   return (
     <>
       <Card
+        className="shadow-md"
         title={<h1 className="text-lg">{title}</h1>}
         extra={active}>
         <Table

@@ -1,22 +1,24 @@
 import React from 'react';
-import { Modal, ModalProps, Button } from 'antd';
+import { Modal, Button } from 'antd';
 
-interface ModalTemplateProps extends ModalProps {
+export interface ModalTemplateProps {
   visible: boolean;
-  onClose: () => void;
-  onOk: () => void;
+  onClose?: () => void;
+  onOk?: () => void;
+  footerCheck: boolean;
+  children: React.ReactNode;
+  title: string;
 }
 
-const ModalTemplate: React.FC<ModalTemplateProps> = ({ visible, onClose, ...modalProps }) => {
+const ModalTemplate: React.FC<ModalTemplateProps> = ({ visible, onClose, footerCheck, children, onOk, title, ...modalProps }) => {
   return (
-    <Modal {...modalProps} visible={visible} onCancel={onClose} footer={[
+    <Modal {...modalProps} visible={visible} onCancel={onClose} title={title} footer={footerCheck ?[
       <Button key="cancel" onClick={onClose}>Cancel</Button>,
       <Button key="ok" type="primary" onClick={() => {
-        modalProps.onOk && modalProps.onOk();
-        onClose();
+        onOk && onOk();
       }}>OK</Button>,
-    ]}>
-      {modalProps.children}
+    ] : null}>
+      {children}
     </Modal>
   );
 };

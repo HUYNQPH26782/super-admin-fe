@@ -51,8 +51,6 @@ function CRUDRolesManagement() {
       "Notification Title",
       "This is the content of the notification."
     );
-    console.log(getValues());
-    
   };
 
   // Modal

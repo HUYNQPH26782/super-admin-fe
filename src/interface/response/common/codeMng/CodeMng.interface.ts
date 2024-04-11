@@ -1,5 +1,4 @@
 export interface ICodeMng {
-    cdId?: string;
-    upCdId?: string;
-    cdNm?: string;
+    value?: string | number | undefined | null;
+    label?: string;
 }

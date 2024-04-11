@@ -36,7 +36,6 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   useEffect(() => {
     MenuAPI.getMenu().then((result: any) => {
       dispatch(SetMenu(result.data));
-      console.log(result);
     });
   }, [dispatch]);
 

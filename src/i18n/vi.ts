@@ -7,10 +7,12 @@ export const vi = {
       common: {
         badRequestException: "Lỗi dữ liệu",
         rowNum: "#",
+        action: "Hành động",
         button: {
           create: "Thêm",
           update: "Sửa",
           delete: "Xóa",
+          detail: "Chi tiết",
           goToUpdate: "Đi tới màn sửa",
           back: "Quay lại"
         },
@@ -20,8 +22,17 @@ export const vi = {
         radiobox: {
           radioboxAll: 'Lựa chọn'
         },
+        select: {
+          selectDefault: 'Lựa chọn'
+        },
         pagination: {
           page: "/ trang"
+        },
+        notification: {
+          error: "Thông báo lỗi",
+          success: "Thông báo thành công",
+          warning: "Cảnh báo",
+          info: "Thông báo"
         }
       },
       base: {
@@ -49,6 +60,9 @@ export const vi = {
         titleCreate: "[Tạo mới chức năng]",
         titleUpdate: "[Chỉnh sửa chức năng]",
         breakcrumb: "Chức năng",
+        createSuccess: "Tạo mới chức năng thành công",
+        updateSuccess: "Chỉnh sửa chức năng thành công",
+        deleteSuccess: "Xóa chức năng thành công",
         table: {
           name: "Tên chức năng",
           code: "Mã chức năng",
@@ -64,6 +78,10 @@ export const vi = {
           isStart: "Hoạt động",
           key: "Key(đa ngôn ngữ)",
           parentId: "Menu cha",
+        },
+        status: {
+          active: "Hoạt động",
+          unActive: "Không hoạt động"
         }
       }
   };

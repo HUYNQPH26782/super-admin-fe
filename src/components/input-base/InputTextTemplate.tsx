@@ -1,32 +1,46 @@
 import React from "react";
 import { Input } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
-import { FieldError } from "react-hook-form";
+import { TYPE_MANAGEMENT } from "../../interface/constants/type/Type.const";
 
 interface Props {
   name: string;
   control: any;
+  mode?: string;
   [key: string]: any;
 }
 
-const InputTextTemplate: React.FC<Props> = ({ name, control, ...restProps }) => {
+const InputTextTemplate: React.FC<Props> = ({
+  name,
+  mode,
+  control,
+  ...restProps
+}) => {
   return (
     <>
       <Controller
         name={name}
         control={control}
-        rules={{ required: 'Trường này là bắt buộc' }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            {...restProps}
-            onBlur={(e) => {
-              if (field.value) {
-                field.onChange(field.value.trim());
-              }
-            }}
-          />
-        )}
+        render={({ field }) => {
+          return (
+            <>
+              {mode === TYPE_MANAGEMENT.MODE_DETAIL ? (
+                <span 
+                {...field}>{field.value}</span> 
+              ) : (
+                <Input
+                  {...field}
+                  {...restProps}
+                  onBlur={(e) => {
+                    if (field.value) {
+                      field.onChange(field.value.trim());
+                    }
+                  }}
+                />
+              )}
+            </>
+          );
+        }}
       />
     </>
   );

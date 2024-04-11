@@ -2,14 +2,10 @@ import React from "react";
 import { Radio, RadioChangeEvent } from "antd";
 import { Controller, useController } from "react-hook-form";
 import { t } from "i18next";
-
-interface Option {
-  value: string | number | undefined | null;
-  label: string;
-}
+import { ICodeMng } from "../../interface/response/common/codeMng/CodeMng.interface";
 
 type Props = {
-  options: Option[];
+  options: ICodeMng[];
   name: string;
   control: any;
   isCheck: Boolean;
@@ -41,7 +37,7 @@ const ListRadioboxTemplate: React.FC<Props> = ({
       ) : (
         <></>
       )}
-      {options.map((el: Option) => (
+      {options.map((el: ICodeMng) => (
         <Radio key={el.value} value={el.value}>
           {el.label}
         </Radio>

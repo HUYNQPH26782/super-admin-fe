@@ -43,8 +43,6 @@ function TableTemplate({
 
   const paginationChange = (page: number) => {
     setCurrent(page);
-    console.log(page);
-    
     handlePaginationChange(page);
   };
 

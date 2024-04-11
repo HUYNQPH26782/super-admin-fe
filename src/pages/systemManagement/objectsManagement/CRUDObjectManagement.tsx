@@ -5,7 +5,7 @@ import InputTextTemplate from "../../../components/input-base/InputTextTemplate"
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import { useForm } from "react-hook-form";
 import ButtonBase from "../../../components/button-base/ButtonBase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
@@ -16,10 +16,12 @@ import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { CodeMngApi } from "../../../api/common/codeMng.api";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { GetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
+import { GetCodeMng, SetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
+import ListRadioboxTemplate from "../../../components/input-base/ListRadioboxTemplate";
 
 function CRUDObjectManagement() {
   const navigate = useNavigate();
+  const { mode, id } = useParams();
   const { openNotification } = useNotification();
   const codeMngData = useAppSelector(GetCodeMng);
   const dispatch = useAppDispatch();
@@ -27,39 +29,46 @@ function CRUDObjectManagement() {
     defaultValues: {
       isActive: 1,
       name: "",
-      code: "",
+      code: "aaaaaaaaa",
       orderBy: null,
       icons: "",
       url: "",
-      isStart: null,
-      type: "",
+      isStart: 1,
+      type: "OBJECT_TYPE_1",
       key: "",
       parentId: null,
-    }
+    },
+    errors: {}
   });
+
+  console.log(mode, id);
+  
+
+  const isStatus = [
+    { value: 1, label: t('objectsManagement.status.active') },
+    { value: 0, label: t('objectsManagement.status.unActive') }
+  ]
 
   const back = () => {
     navigate(ROUTER_BASE.objectManagement.path);
   };
 
   const onCreate = () => {
-    
-    console.log(getValues());
     ObjectsAPI.addObject(getValues()).then((response) => {
       if (response.status && response.status === TYPE_MANAGEMENT.STATUS_SUCCESS) {
         openNotification(
-          "error",
-          "Notification Title",
-          "This is the content of the notification."
+          "success",
+          t('common.notification.success'),
+          t('objectsManagement.createSuccess')
         );
+        back();
       }
-      
     })
   };
 
   useEffect(() => {
     CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
-      console.log(res.data);
+      dispatch(SetCodeMng(res.data.data))
     })
   }, [])
 
@@ -85,19 +94,24 @@ function CRUDObjectManagement() {
         <FormTemplate contentSize={"70"} labelSize={"30"}>
           {/* content form crud */}
           <FormChildTemplate title={t('objectsManagement.fieldName.code')} required={true}>
-            <InputTextTemplate name="code" control={control} />
+            <InputTextTemplate mode={mode} name="code" control={control} />
           </FormChildTemplate>
           
           <FormChildTemplate title={t('objectsManagement.fieldName.name')} required={true}>
-            <InputTextTemplate name="name" control={control} />
+            <InputTextTemplate name="name" rules={[{ required: true, message: 'Please input your username!' }]} control={control} />
           </FormChildTemplate>
           
           <FormChildTemplate title={t('objectsManagement.fieldName.type')} required={true}>
-            <InputTextTemplate name="type" control={control} />
+            <ListRadioboxTemplate
+              name="type"
+              control={control}
+              options={codeMngData}
+              isCheck={false}
+            />
           </FormChildTemplate>
           
           <FormChildTemplate title={t('objectsManagement.fieldName.orderBy')} required={true}>
-            <InputTextTemplate name="orderBy" control={control} />
+            <InputTextTemplate type="number" name="orderBy" control={control} />
           </FormChildTemplate>
           
           <FormChildTemplate title={t('objectsManagement.fieldName.icons')} required={true}>
@@ -109,7 +123,12 @@ function CRUDObjectManagement() {
           </FormChildTemplate>
           
           <FormChildTemplate title={t('objectsManagement.fieldName.isStart')} required={true}>
-            <InputTextTemplate name="isStart" control={control} />
+            <ListRadioboxTemplate
+              name="isStart"
+              control={control}
+              options={isStatus}
+              isCheck={false}
+            />
           </FormChildTemplate>
 
           <FormChildTemplate title={t('objectsManagement.fieldName.key')} required={true}>
@@ -118,34 +137,7 @@ function CRUDObjectManagement() {
               control={control}
             />
           </FormChildTemplate>
-{/* 
-          <FormChildTemplate title={"Ice cream type"} required={true}>
-            <SelectBoxTemplate
-              name="iceCreamType"
-              control={control}
-              options={options}
-            />
-          </FormChildTemplate>
 
-          <FormChildTemplate title={"Do you like"} required={true}>
-            <ListCheckboxTemplate
-              name="youLike"
-              control={control}
-              options={optionsCheck}
-              isCheckAll={true}
-            />
-          </FormChildTemplate>
-
-          <FormChildTemplate title={"Do you like"} required={true}>
-            <ListRadioboxTemplate
-              name="gender"
-              control={control}
-              options={optionRadio}
-              isCheck={true}
-            />
-          </FormChildTemplate> */}
-
-          {/* footer form crud */}
           <FormFooterTemplate>
             <ButtonBase className="mx-2 btn btn__back" onClick={() => back()}>
               {t("common.button.back")}

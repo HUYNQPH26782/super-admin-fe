@@ -11,22 +11,25 @@ import {
   GetObjects,
   SetObjects,
 } from "../../../app/reducers/systemManagement/Objects/Objects.reducer";
-import { ObjectsRequest } from "../../../interface/request/systemManagement/objects/ObjectsRequest.interface";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
-import { Button, TablePaginationConfig, TableProps, Tooltip } from "antd";
+import { Button, Space, TablePaginationConfig, TableProps, Tooltip } from "antd";
 import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import { useForm } from "react-hook-form";
 import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
+import { GetCodeMng, SetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
+import { CodeMngApi } from "../../../api/common/codeMng.api";
+import { IObjects } from "../../../interface/response/systemManagement/objects/Objects.interface";
 
 function ObjectsManagementIndex() {
   const navigate = useNavigate();
   const data = useAppSelector(GetObjects);
+  const codeMngData = useAppSelector(GetCodeMng);
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
-  const { control, handleSubmit, getValues, reset, setValue } = useForm({
+  const { control, getValues, reset, setValue } = useForm({
     defaultValues: {
       code: "",
       name: "",
@@ -60,7 +63,6 @@ function ObjectsManagementIndex() {
       dispatch(SetObjects(result.data.data.data));
       setValue("current", result.data.data.currentPage);
       setValue("total", result.data.data.totalPages);
-      console.log(result.data.data);
       setLoading(false);
     });
   };
@@ -70,7 +72,6 @@ function ObjectsManagementIndex() {
     sorter: any,
     extra: any
   ) => {
-    console.log(extra);
     setValue("sortType", extra.order ? extra.order.slice(0, -3) : "");
     setValue("sortField", extra.field);
     fetchData();
@@ -85,6 +86,13 @@ function ObjectsManagementIndex() {
 
       setLoading(false);
     });
+    
+    CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
+      if (res.data.data) {
+        res.data.data.unshift({ value: "", label: t('common.select.selectDefault') });
+      }
+      dispatch(SetCodeMng(res.data.data))
+    })
   }, []);
 
   const columns = [
@@ -120,13 +128,24 @@ function ObjectsManagementIndex() {
       showSorterTooltip: false,
       render: (data: string) => `${t(data)}`,
     },
-  ];
-
-  const options = [
-    { value: "jack", label: "Jack" },
-    { value: "lucy", label: "Lucy" },
-    { value: "Yiminghe", label: "yiminghe" },
-    { value: "disabled", label: "Disabled", disabled: true },
+    {
+      title: t("common.action"),
+      key: 'action',
+      render: (record: IObjects) => (
+        <Space size="middle">
+          <ButtonBase
+              onClick={() =>
+                navigate(
+                  `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
+                )
+              }
+              className="mx-2 btn btn__create"
+            >
+              {t("common.button.detail")}
+            </ButtonBase>
+        </Space>
+      ),
+    },
   ];
 
   return (
@@ -135,8 +154,8 @@ function ObjectsManagementIndex() {
         <FormSearchTemplate
           footer={
             <>
-              <Button>Clear</Button>
-              <Button onClick={() => fetchData()}>Tìm kiếm</Button>
+              <Button className="mx-2">Clear</Button>
+              <Button className="mx-2" onClick={() => fetchData()}>Tìm kiếm</Button>
             </>
           }
         >
@@ -159,7 +178,7 @@ function ObjectsManagementIndex() {
               className="w-full"
               name="type"
               control={control}
-              options={options}
+              options={codeMngData}
             />
           </FormSearchChildTemplate>
         </FormSearchTemplate>

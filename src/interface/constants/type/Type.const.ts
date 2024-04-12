@@ -9,7 +9,9 @@ export const TYPE_MANAGEMENT = {
   DEFAULT_SIZE: 10,
   DEFAULT_CURRENT: 0,
   DEFAULT_TOTAL: 0,
-  STATUS_SUCCESS: 200
+  STATUS_SUCCESS: 200,
+  STATUS_ERROR_400: 400,
+  STATUS_ERROR_404: 404
 };
 
 export type NotificationType = 'success' | 'info' | 'warning' | 'error';

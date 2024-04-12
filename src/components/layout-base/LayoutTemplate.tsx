@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -6,7 +6,7 @@ import {
   CaretDownOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Button, Dropdown, Layout, Menu, Select } from "antd";
+import { Breadcrumb, Button, ConfigProvider, Dropdown, Layout, Menu, Popover, Segmented, Select } from "antd";
 import { useTranslation } from "react-i18next";
 import { LANGUAGES } from "../../interface/constants/languages";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -98,21 +98,6 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       icon
     } as MenuItem;
   }
-
-  // const itemsMenu: MenuItem[] = [
-  //   getItem("Option 1", "1", <PieChartOutlined />),
-  //   getItem("Option 2", "2", <DesktopOutlined />),
-  //   getItem("User", "sub1", <UserOutlined />, [
-  //     getItem("Tom", "3", <UserOutlined />),
-  //     getItem("Bill", "4"),
-  //     getItem("Alex", "5"),
-  //   ]),
-  //   getItem("Team", "sub2", <TeamOutlined />, [
-  //     getItem("Team 1", "6"),
-  //     getItem("Team 2", "8"),
-  //   ]),
-  //   getItem("Files", "9", <FileOutlined />),
-  // ];
 
   const items: MenuProps["items"] = [
     {
@@ -218,9 +203,18 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
           />
           <div style={{ marginRight: 15 }}>
             <span>
-              <Dropdown menu={{ items }} placement="bottomRight">
-                <CaretDownOutlined />
-              </Dropdown>
+          <Popover placement="bottomRight" title={null} content={<>
+            <Select
+              defaultValue={i18n.language}
+              onChange={onChangeLang}
+              options={LANGUAGES.map(({ code, label }) => ({
+                value: code,
+                label: label,
+              }))}
+            />
+          </>}>
+            <CaretDownOutlined />
+          </Popover>
             </span>
           </div>
         </Header>
@@ -232,7 +226,6 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: 20,
             }}
           >
             <h2

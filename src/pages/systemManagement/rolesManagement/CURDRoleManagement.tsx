@@ -3,169 +3,273 @@ import FormFooterTemplate from "../../../components/form-base/form-basic-base/Fo
 import FormTemplate from "../../../components/form-base/form-basic-base/FormTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ButtonBase from "../../../components/button-base/ButtonBase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { useState } from "react";
-import ModalTemplate from "../../../components/modal-base/ModalTemplate";
-import { Input } from "antd";
-import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
-import ListCheckboxTemplate from "../../../components/input-base/ListCheckboxTemplate";
-import ListRadioboxTemplate from "../../../components/input-base/ListRadioboxTemplate";
-
-enum GenderEnum {
-  female = "female",
-  male = "male",
-  other = "other",
-}
-
-interface IFormInput {
-  firstName: string;
-  second: string;
-  gender: GenderEnum;
-}
+import { useEffect } from "react";
+import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
+import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
+import { useGlobalLoading } from "../../../components/global-loading/GlobalLoading";
+import { useModalProvider } from "../../../components/notification-base/ModalNotificationTemplate";
+import { RolesRequest } from "../../../interface/request/systemManagement/roles/RolesRequest.interface";
+import TreeTemplate from "../../../components/tree-base/TreeTemplate";
+import { TreeDataNode } from "antd";
 
 function CRUDRolesManagement() {
   const navigate = useNavigate();
+  const { mode, id } = useParams();
   const { openNotification } = useNotification();
-  const { control, handleSubmit, getValues } = useForm({
+  const { setLoading } = useGlobalLoading();
+  const { openModal } = useModalProvider();
+
+  const { control, getValues, watch, reset } = useForm<RolesRequest>({
     defaultValues: {
-      firstName: "aaaaaaaaa",
-      lastName: 1111,
-      iceCreamType: {},
-      youLike: ["Apple", "Orange"],
-      gender: 1
+      id: "",
+      isActive: 1,
+      roleName: "",
+      roleCode: ""
     },
-  })
+  });
 
   const back = () => {
     navigate(ROUTER_BASE.roleManagement.path);
   };
 
   const onCreate = () => {
-    openNotification(
-      "error",
-      "Notification Title",
-      "This is the content of the notification."
-    );
+    setLoading(true);
+    // ObjectsAPI.addObject(getValues())
+    //   .then((response) => {
+    //     if (
+    //       response.status &&
+    //       response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+    //     ) {
+    //       openNotification(
+    //         "success",
+    //         t("common.notification.success"),
+    //         t("rolesManagement.createSuccess")
+    //       );
+    //       back();
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     if (
+    //       error.response &&
+    //       error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+    //     ) {
+    //       if (
+    //         error.response.data &&
+    //         error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+    //       ) {
+    //         openNotification(
+    //           "error",
+    //           t("common.notification.error"),
+    //           error.response.data
+    //         );
+    //       }
+    //     }
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
-  // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
+  const onUpdate = () => {
+    setLoading(true);
+    // ObjectsAPI.updateObject(getValues())
+    //   .then((response) => {
+    //     if (
+    //       response.status &&
+    //       response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+    //     ) {
+    //       openNotification(
+    //         "success",
+    //         t("common.notification.success"),
+    //         t("rolesManagement.updateSuccess")
+    //       );
+    //       back();
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     if (
+    //       error.response &&
+    //       error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+    //     ) {
+    //       if (
+    //         error.response.data &&
+    //         error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+    //       ) {
+    //         openNotification(
+    //           "error",
+    //           t("common.notification.error"),
+    //           error.response.data
+    //         );
+    //       }
+    //     }
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const options = [
-    { value: 'jack', label: 'Jack' },
-    { value: 'lucy', label: 'Lucy' },
-    { value: 'Yiminghe', label: 'yiminghe' },
-    { value: 'disabled', label: 'Disabled', disabled: true },
-  ]
-
-  const optionsCheck = ["Apple", "Pear", "Orange"];
-
-  const optionRadio = [
-    {
-      value: 1,
-      label: "Nam"
-    },
-    {
-      value: 2,
-      label: "Nữ"
-    },
-    {
-      value: 3,
-      label: "Khác"
+  useEffect(() => {
+    setLoading(true);
+    if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
+      ObjectsAPI.getObjectDetail(id)
+        .then((res) => {
+          reset(res.data.data);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+          ) {
+            if (
+              error.response.data &&
+              error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_404
+            ) {
+              openModal(
+                "error",
+                t("common.notification.error"),
+                t("rolesManagement.error.notFound"),
+                () => {
+                  back();
+                }
+              );
+            }
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  ]
+    setLoading(false);
+  }, []);
+  
+  const treeData: TreeDataNode[] = [
+    {
+      title: '0-0',
+      key: '0-0',
+      children: [
+        {
+          title: '0-0-0',
+          key: '0-0-0',
+          children: [
+            { title: '0-0-0-0', key: '0-0-0-0' },
+            { title: '0-0-0-1', key: '0-0-0-1' },
+            { title: '0-0-0-2', key: '0-0-0-2' },
+          ],
+        },
+        {
+          title: '0-0-1',
+          key: '0-0-1',
+          children: [
+            { title: '0-0-1-0', key: '0-0-1-0' },
+            { title: '0-0-1-1', key: '0-0-1-1' },
+            { title: '0-0-1-2', key: '0-0-1-2' },
+          ],
+        },
+        {
+          title: '0-0-2',
+          key: '0-0-2',
+        },
+      ],
+    },
+    {
+      title: '0-1',
+      key: '0-1',
+      children: [
+        { title: '0-1-0-0', key: '0-1-0-0' },
+        { title: '0-1-0-1', key: '0-1-0-1' },
+        { title: '0-1-0-2', key: '0-1-0-2' },
+      ],
+    },
+    {
+      title: '0-2',
+      key: '0-2',
+    },
+  ];
 
   return (
     <>
-      <CardLayoutTemplate title="[Thêm mới phân quyền]">
+      <CardLayoutTemplate
+        className="mb-10 mt-8 shadow-md"
+        title={
+          mode === TYPE_MANAGEMENT.MODE_CREATE
+            ? t("rolesManagement.titleCreate")
+            : mode === TYPE_MANAGEMENT.MODE_UPDATE
+            ? t("rolesManagement.titleUpdate")
+            : t("rolesManagement.titleDetail")
+        }
+      >
         {/* form crud */}
         <FormTemplate contentSize={"70"} labelSize={"30"}>
-
           {/* content form crud */}
-          <FormChildTemplate title={"First Name"} required={true}>
-            <InputTextTemplate name="firstName" control={control} />
+          <FormChildTemplate
+            title={t("rolesManagement.fieldName.code")}
+            required={true}
+          >
+            <InputTextTemplate mode={mode} name="roleCode" control={control} />
           </FormChildTemplate>
 
-          <FormChildTemplate title={"Last Name"} required={true}>
-            <InputTextTemplate type={"number"} name="lastName" control={control} />
+          <FormChildTemplate
+            title={t("rolesManagement.fieldName.name")}
+            required={true}
+          >
+            <InputTextTemplate
+              mode={mode}
+              name="roleName"
+              control={control}
+            />
           </FormChildTemplate>
 
-          <FormChildTemplate title={"Ice cream type"} required={true}>
-            <SelectBoxTemplate name="iceCreamType" control={control} options={options} />
+          <FormChildTemplate
+            title={"Tree"}
+            required={true}
+          >
+            <TreeTemplate data={treeData} />
           </FormChildTemplate>
-
-          <FormChildTemplate title={"Do you like"} required={true}>
-            <ListCheckboxTemplate name="youLike" control={control} options={optionsCheck} isCheckAll={true} />
-          </FormChildTemplate>
-
-          <FormChildTemplate title={"Do you like"} required={true}>
-            <ListRadioboxTemplate name="gender" control={control} options={optionRadio} isCheck={true} />
-          </FormChildTemplate>
-
-          {/* footer form crud */}
+          
           <FormFooterTemplate>
+            {mode === TYPE_MANAGEMENT.MODE_CREATE ? (
+              <ButtonBase
+                className="mx-2 btn btn__create"
+                onClick={() => onCreate()}
+              >
+                {t("common.button.create")}
+              </ButtonBase>
+            ) : mode === TYPE_MANAGEMENT.MODE_DETAIL ? (
+              <ButtonBase
+                onClick={() =>
+                  navigate(
+                    `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_UPDATE}/${id}`
+                  )
+                }
+                className="mx-2 btn btn__goToUpdate"
+              >
+                {t("common.button.goToUpdate")}
+              </ButtonBase>
+            ) : (
+              <>
+                {" "}
+                <ButtonBase
+                  className="mx-2 btn btn__update"
+                  onClick={() => onUpdate()}
+                >
+                  {t("common.button.update")}
+                </ButtonBase>
+                <ButtonBase className="mx-2 btn btn__delete">
+                  {t("common.button.delete")}
+                </ButtonBase>
+              </>
+            )}
             <ButtonBase className="mx-2 btn btn__back" onClick={() => back()}>
               {t("common.button.back")}
             </ButtonBase>
-            <ButtonBase
-              className="mx-2 btn btn__create"
-              onClick={() => onCreate()}
-            >
-              {t("common.button.create")}
-            </ButtonBase>
-            <ButtonBase
-              className="mx-2 btn btn__update"
-              onClick={() => showModal()}
-            >
-              {t("common.button.update")}
-            </ButtonBase>
-            <ButtonBase className="mx-2 btn btn__goToUpdate">
-              {t("common.button.goToUpdate")}
-            </ButtonBase>
-            <ButtonBase className="mx-2 btn btn__delete">
-              {t("common.button.delete")}
-            </ButtonBase>
           </FormFooterTemplate>
         </FormTemplate>
-        {/* <label>First Name</label>
-            <input 
-        {...register("firstName", { required: true })} />
-        {errors.firstName && <p className="text-red-500">First name is required</p>}
-            <label>Gender Selection</label>
-            <select {...register("gender")}>
-                <option value="female">female</option>
-                <option value="male">male</option>
-                <option value="other">other</option>
-            </select>
-            <button  onClick={handleSubmit(onSubmit)} >click</button> */}
-
-        {/* <ModalTemplate
-          title="Basic Modal"
-          visible={isModalOpen}
-          onClose={handleCancel}
-          onOk={handleOk}
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </ModalTemplate> */}
       </CardLayoutTemplate>
     </>
   );

@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ObjectsRequest } from "../../../interface/request/systemManagement/objects/ObjectsRequest.interface";
 import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
@@ -26,6 +26,8 @@ import {
   SetMenuParent,
 } from "../../../app/reducers/systemManagement/Objects/MenuParent.reducer";
 import FontAwesomeBase from "../../../components/font-awesome/FontAwesomeBase";
+import { useGlobalLoading } from "../../../components/global-loading/GlobalLoading";
+import { useModalProvider } from "../../../components/notification-base/ModalNotificationTemplate";
 
 function CRUDObjectManagement() {
   const navigate = useNavigate();
@@ -34,6 +36,9 @@ function CRUDObjectManagement() {
   const codeMngData = useAppSelector(GetCodeMng);
   const menuParentData = useAppSelector(GetMenuParent);
   const dispatch = useAppDispatch();
+  const { setLoading } = useGlobalLoading();
+  const { openModal } = useModalProvider();
+
   const { control, getValues, watch, reset } = useForm<ObjectsRequest>({
     defaultValues: {
       id: "",
@@ -62,38 +67,83 @@ function CRUDObjectManagement() {
   };
 
   const onCreate = () => {
-    ObjectsAPI.addObject(getValues()).then((response) => {
-      if (
-        response.status &&
-        response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
-      ) {
-        openNotification(
-          "success",
-          t("common.notification.success"),
-          t("objectsManagement.createSuccess")
-        );
-        back();
-      }
-    });
+    setLoading(true);
+    ObjectsAPI.addObject(getValues())
+      .then((response) => {
+        if (
+          response.status &&
+          response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+        ) {
+          openNotification(
+            "success",
+            t("common.notification.success"),
+            t("objectsManagement.createSuccess")
+          );
+          back();
+        }
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+        ) {
+          if (
+            error.response.data &&
+            error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+          ) {
+            openNotification(
+              "error",
+              t("common.notification.error"),
+              error.response.data
+            );
+          }
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
-  
+
   const onUpdate = () => {
-    ObjectsAPI.updateObject(getValues()).then((response) => {
-      if (
-        response.status &&
-        response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
-      ) {
-        openNotification(
-          "success",
-          t("common.notification.success"),
-          t("objectsManagement.updateSuccess")
-        );
-        back();
-      }
-    });
+    setLoading(true);
+    ObjectsAPI.updateObject(getValues())
+      .then((response) => {
+        if (
+          response.status &&
+          response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+        ) {
+          openNotification(
+            "success",
+            t("common.notification.success"),
+            t("objectsManagement.updateSuccess")
+          );
+          back();
+        }
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+        ) {
+          if (
+            error.response.data &&
+            error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+          ) {
+            openNotification(
+              "error",
+              t("common.notification.error"),
+              error.response.data
+            );
+          }
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
+    setLoading(true);
     CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
       dispatch(SetCodeMng(res.data.data));
     });
@@ -110,12 +160,35 @@ function CRUDObjectManagement() {
       );
     });
     if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
-      ObjectsAPI.getObjectDetail(id).then((res) => {
-        reset(res.data.data);
-        console.log(res.data.data);
-        
-      });
+      ObjectsAPI.getObjectDetail(id)
+        .then((res) => {
+          reset(res.data.data);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+          ) {
+            if (
+              error.response.data &&
+              error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_404
+            ) {
+              openModal(
+                "error",
+                t("common.notification.error"),
+                t("objectsManagement.error.notFound"),
+                () => {
+                  back();
+                }
+              );
+            }
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
+    setLoading(false);
   }, []);
 
   const filterOption = (
@@ -128,6 +201,7 @@ function CRUDObjectManagement() {
   return (
     <>
       <CardLayoutTemplate
+        className="mb-10 mt-8 shadow-md"
         title={
           mode === TYPE_MANAGEMENT.MODE_CREATE
             ? t("objectsManagement.titleCreate")
@@ -153,9 +227,6 @@ function CRUDObjectManagement() {
             <InputTextTemplate
               mode={mode}
               name="name"
-              rules={[
-                { required: true, message: "Please input your username!" },
-              ]}
               control={control}
             />
           </FormChildTemplate>
@@ -208,7 +279,9 @@ function CRUDObjectManagement() {
           >
             <div className="flex justify-between items-center">
               <InputTextTemplate mode={mode} name="icons" control={control} />
-              <div className="ml-4 w-[30px]"><FontAwesomeBase iconName={icons} /></div>
+              <div className="ml-4 w-[30px]">
+                <FontAwesomeBase iconName={icons} />
+              </div>
             </div>
           </FormChildTemplate>
 
@@ -261,7 +334,10 @@ function CRUDObjectManagement() {
             ) : (
               <>
                 {" "}
-                <ButtonBase className="mx-2 btn btn__update" onClick={() => onUpdate()} >
+                <ButtonBase
+                  className="mx-2 btn btn__update"
+                  onClick={() => onUpdate()}
+                >
                   {t("common.button.update")}
                 </ButtonBase>
                 <ButtonBase className="mx-2 btn btn__delete">

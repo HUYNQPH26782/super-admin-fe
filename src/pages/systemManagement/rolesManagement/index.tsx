@@ -1,65 +1,198 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetRoles, SetRoles } from "../../../app/reducers/systemManagement/Roles/Roles.reducer";
-import { RolesAPI } from "../../../api/systemManagement/roles.api";
-import TableTemplate from "../../../components/table-base/TableTemplate";
-import { t } from "i18next";
-import { RolesRequest } from "../../../interface/request/systemManagement/roles/RolesRequest.interface";
-import ButtonBase from "../../../components/button-base/ButtonBase";
-import { useNavigate } from "react-router-dom";
-import { ROUTER_BASE } from "../../../router/router.constant";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
+import { t } from "i18next";
+import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
+import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
+import { Button, Space, TablePaginationConfig } from "antd";
+import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
+import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
+import TableTemplate from "../../../components/table-base/TableTemplate";
+import ButtonBase from "../../../components/button-base/ButtonBase";
+import { ROUTER_BASE } from "../../../router/router.constant";
+import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
+import { IObjects } from "../../../interface/response/systemManagement/objects/Objects.interface";
+import { RolesAPI } from "../../../api/systemManagement/roles.api";
 
 function RolesManagementIndex() {
   const navigate = useNavigate();
   const data = useAppSelector(GetRoles);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoadingTable] = useState<boolean>(true);
   const dispatch = useAppDispatch();
-  // const [tableParams, setTableParams] = useState<RolesRequest>({
-  //   code: "",
-  //   name: "",
-  //   pagination: {
-  //     current: 1,
-  //     pageSize: 10,
-  //   }
-  // });
-  useEffect(() => {
-    RolesAPI.getRoles().then((result: any) => {
-      dispatch(SetRoles(result.data.data.data));
-      setLoading(false)
+
+  const { control, getValues, setValue } = useForm({
+    defaultValues: {
+      code: "",
+      name: "",
+      current: TYPE_MANAGEMENT.DEFAULT_CURRENT,
+      size: TYPE_MANAGEMENT.DEFAULT_SIZE,
+      total: TYPE_MANAGEMENT.DEFAULT_TOTAL,
+      sortField: null,
+      sortType: "",
+    },
+  });
+
+  const handlePageChange = (
+    pagination: TablePaginationConfig,
+    sorter: any,
+    extra: any
+  ) => {
+    setValue("sortType", extra.order ? extra.order.slice(0, -3) : "");
+    setValue("sortField", extra.field);
+    fetchData();
+  };
+
+  const fetchData = () => {
+    setLoadingTable(true);
+    ObjectsAPI.getObjects(getValues()).then((result: any) => {
+      if (result.data.data && result.data.data.data) {
+        dispatch(SetRoles(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
     });
-  }, [dispatch]);
-  
+  };
+
+  useEffect(() => {
+    setLoadingTable(true);
+    RolesAPI.getRoles({}).then((result: any) => {
+      if (result.data.data && result.data.data.data) {
+        console.log(result.data.data.data);
+        
+        dispatch(SetRoles(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
+    });
+    setLoadingTable(false);
+  }, []);
+
+  const handlePageSizeChange = (value: number) => {
+    setValue("size", value);
+    setLoadingTable(true);
+    ObjectsAPI.getObjects({size: getValues("size")}).then((result: any) => {
+      if (result.data.data && result.data.data.data) {
+        dispatch(SetRoles(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
+    });
+  };
+
+  const handlePaginationChange = (page: number) => {
+    setValue("current", page - 1);
+    fetchData();
+  };
+
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: t("common.rowNum"),
+      dataIndex: "rowNumber",
+      key: "rowNumber",
+      align: "center",
+      showSorterTooltip: false,
+      render: (text: any, record: any, index: number) =>
+        getValues("current") * getValues("size") + index + 1,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: t("rolesManagement.table.name"),
+      dataIndex: "roleName",
+      key: "roleName",
+      sorter: true,
+      showSorterTooltip: false,
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: t("rolesManagement.table.code"),
+      dataIndex: "roleCode",
+      key: "roleCode",
+      sorter: true,
+      showSorterTooltip: false,
+    },
+    {
+      title: t("common.action"),
+      key: 'action',
+      render: (record: IObjects) => (
+        <Space size="middle">
+          <ButtonBase
+              onClick={() =>
+                navigate(
+                  `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
+                )
+              }
+              className="mx-2 btn btn__create"
+            >
+              {t("common.button.detail")}
+            </ButtonBase>
+        </Space>
+      ),
     },
   ];
+
   return (
     <>
-      {/* <TableTemplate
-        title={t('titleTable')}
+      <CardLayoutTemplate title={t("titleSearch")} 
+        className="mb-10 mt-8 shadow-md">
+        <FormSearchTemplate
+          footer={
+            <>
+              <Button className="mx-2">{t('common.formSearch.clear')}</Button>
+              <Button className="mx-2" onClick={() => fetchData()}>{t('common.formSearch.search')}</Button>
+            </>
+          }
+        >
+          <FormSearchChildTemplate label={t("rolesManagement.table.name")}>
+            <InputTextTemplate
+              control={control}
+              name="name"
+            ></InputTextTemplate>
+          </FormSearchChildTemplate>
+
+          <FormSearchChildTemplate label={t("rolesManagement.table.code")}>
+            <InputTextTemplate
+              control={control}
+              name="code"
+            ></InputTextTemplate>
+          </FormSearchChildTemplate>
+        </FormSearchTemplate>
+      </CardLayoutTemplate>
+      <TableTemplate
+        title={t("titleTable")}
         active={
           <>
-            <ButtonBase onClick={() => navigate(`${ROUTER_BASE.roleManagement.path}/${TYPE_MANAGEMENT.MODE_CREATE}/0`)} className='mx-2 btn btn__create'>{t('common.button.create')}</ButtonBase>
+            <ButtonBase
+              onClick={() =>
+                navigate(
+                  `${ROUTER_BASE.roleManagement.path}/${TYPE_MANAGEMENT.MODE_CREATE}/0`
+                )
+              }
+              className="mx-2 btn btn__create"
+            >
+              {t("common.button.create")}
+            </ButtonBase>
           </>
         }
+        onChange={handlePageChange}
+        handlePageSizeChange={handlePageSizeChange}
+        handlePaginationChange={handlePaginationChange}
         columns={columns}
-        data={data}
-        tableParams={tableParams}
-        loading={loading}></TableTemplate> */}
+        dataSource={data}
+        loading={loading}
+        paginationProp={{
+          current: getValues("current"),
+          size: getValues("size"),
+          total: getValues("total"),
+        }}
+      ></TableTemplate>
     </>
   );
 }

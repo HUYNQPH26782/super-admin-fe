@@ -13,7 +13,7 @@ import {
 } from "../../../app/reducers/systemManagement/Objects/Objects.reducer";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
-import { Button, Space, TablePaginationConfig, TableProps, Tooltip } from "antd";
+import { Space, TablePaginationConfig } from "antd";
 import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import { useForm } from "react-hook-form";
@@ -21,15 +21,19 @@ import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate"
 import { GetCodeMng, SetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
 import { CodeMngApi } from "../../../api/common/codeMng.api";
 import { IObjects } from "../../../interface/response/systemManagement/objects/Objects.interface";
+import { useNotification } from "../../../components/notification-base/NotificationTemplate";
+import TagTemplate from "../../../components/tag-base/TagTemplate";
 
 function ObjectsManagementIndex() {
   const navigate = useNavigate();
   const data = useAppSelector(GetObjects);
   const codeMngData = useAppSelector(GetCodeMng);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoadingTable] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
-  const { control, getValues, reset, setValue } = useForm({
+  const { openNotification } = useNotification();
+
+  const { control, getValues, setValue } = useForm({
     defaultValues: {
       code: "",
       name: "",
@@ -44,11 +48,15 @@ function ObjectsManagementIndex() {
 
   const handlePageSizeChange = (value: number) => {
     setValue("size", value);
+    setLoadingTable(true);
     ObjectsAPI.getObjects({size: getValues("size")}).then((result: any) => {
-      dispatch(SetObjects(result.data.data.data));
-      setValue("current", result.data.data.currentPage);
-      setValue("total", result.data.data.totalPages);
-      setLoading(false);
+      if (result.data.data && result.data.data.data) {
+        dispatch(SetObjects(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
     });
   };
 
@@ -58,12 +66,15 @@ function ObjectsManagementIndex() {
   };
 
   const fetchData = () => {
-    setLoading(true);
+    setLoadingTable(true);
     ObjectsAPI.getObjects(getValues()).then((result: any) => {
-      dispatch(SetObjects(result.data.data.data));
-      setValue("current", result.data.data.currentPage);
-      setValue("total", result.data.data.totalPages);
-      setLoading(false);
+      if (result.data.data && result.data.data.data) {
+        dispatch(SetObjects(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
     });
   };
 
@@ -72,19 +83,24 @@ function ObjectsManagementIndex() {
     sorter: any,
     extra: any
   ) => {
+    console.log(extra);
     setValue("sortType", extra.order ? extra.order.slice(0, -3) : "");
     setValue("sortField", extra.field);
     fetchData();
   };
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingTable(true);
     ObjectsAPI.getObjects({}).then((result: any) => {
-      dispatch(SetObjects(result.data.data.data));
-      setValue("current", result.data.data.currentPage);
-      setValue("total", result.data.data.totalPages);
-
-      setLoading(false);
+      if (result.data.data && result.data.data.data) {
+        console.log(result.data.data.data);
+        
+        dispatch(SetObjects(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
     });
     
     CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
@@ -93,6 +109,7 @@ function ObjectsManagementIndex() {
       }
       dispatch(SetCodeMng(res.data.data))
     })
+    setLoadingTable(false);
   }, []);
 
   const columns = [
@@ -129,6 +146,21 @@ function ObjectsManagementIndex() {
       render: (data: string) => `${t(data)}`,
     },
     {
+      title: t("objectsManagement.table.isStart"),
+      dataIndex: "isStart",
+      key: "isStart",
+      sorter: true,
+      showSorterTooltip: false,
+      render: (data: number) => { return (<>
+          {data === 1 ? <TagTemplate color="cyan">
+            {t("objectsManagement.status.active")}
+        </TagTemplate> : <TagTemplate color="red">
+            {t("objectsManagement.status.unActive")}
+        </TagTemplate> }
+      </>)
+      },
+    },
+    {
       title: t("common.action"),
       key: 'action',
       render: (record: IObjects) => (
@@ -150,12 +182,12 @@ function ObjectsManagementIndex() {
 
   return (
     <>
-      <CardLayoutTemplate title={t("titleSearch")} className="mb-5 shadow-md">
+      <CardLayoutTemplate title={t("titleSearch")} className="mb-10 mt-8 shadow-md">
         <FormSearchTemplate
           footer={
             <>
-              <Button className="mx-2">Clear</Button>
-              <Button className="mx-2" onClick={() => fetchData()}>Tìm kiếm</Button>
+              <ButtonBase className="mx-2 btnSearch__clear">{t('common.formSearch.clear')}</ButtonBase>
+              <ButtonBase className="mx-2 btnSearch__search" onClick={() => fetchData()}>{t('common.formSearch.search')}</ButtonBase>
             </>
           }
         >
@@ -204,12 +236,12 @@ function ObjectsManagementIndex() {
         handlePaginationChange={handlePaginationChange}
         columns={columns}
         dataSource={data}
+        loading={loading}
         paginationProp={{
           current: getValues("current"),
           size: getValues("size"),
           total: getValues("total"),
         }}
-        loading={loading}
       ></TableTemplate>
     </>
   );

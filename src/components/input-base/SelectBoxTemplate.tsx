@@ -8,6 +8,7 @@ const SelectBoxTemplate: React.FC<any> = ({
   control,
   mode,
   options,
+  defaultValue,
   ...restProps
 }) => {
   return (
@@ -19,7 +20,7 @@ const SelectBoxTemplate: React.FC<any> = ({
           return (
             <>
               <Select
-                defaultValue="lucy"
+                defaultValue={defaultValue}
                 disabled={mode === TYPE_MANAGEMENT.MODE_DETAIL}
                 className="min-w-[150px] text-black"
                 options={options}

@@ -1,4 +1,6 @@
 export interface RolesRequest {
-    code: string,
-    name: string
+    id: number| string,
+    roleCode: string,
+    roleName: string,
+    isActive: number
 }

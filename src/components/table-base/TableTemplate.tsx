@@ -59,6 +59,7 @@ function TableTemplate({
           columns={columns}
           pagination={false}
           onChange={onChange}
+          loading={loading}
           {...restProps}
         />
         <div className="flex justify-center mt-5">

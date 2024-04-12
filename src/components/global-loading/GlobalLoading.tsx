@@ -1,24 +1,40 @@
-import { Spin } from "antd";
-import React from "react";
-import { useAppSelector } from "../../app/hooks";
-// import { SelectLoading } from '../../app/reducers/Loading/Loading.reducer';
-// import { SelectLoading } from '../../app/reducers/Loading/Loading.reducer';
+import React, { createContext, useContext, useState } from 'react';
+import './index.css'
 
-const GlobalLoading = () => {
-  // const loadingState = useAppSelector(SelectLoading);
-  // const [loading, setLoading] = React.useState(loadingState);
+interface GlobalLoadingContextType {
+  setLoading: (loading: boolean) => void;
+}
 
-  // React.useEffect(() => {
-  //   setLoading(loadingState);
-  // }, [loadingState]);
+const GlobalLoadingContext = createContext<GlobalLoadingContextType | undefined>(undefined);
+
+export const GlobalLoadingProvider: React.FC<any> = ({ children }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const setLoadingState = (isLoading: boolean) => {
+    setLoading(isLoading);
+  };
 
   return (
-    <>
-      {/* {loading && <div className="loading"> */}
-      <Spin size="large" />
-      {/* </div>} */}
-    </>
+    <GlobalLoadingContext.Provider value={{ setLoading: setLoadingState }}>
+      {children}
+      {loading && (
+        <div className="global-loading-overlay">
+          <div className="spinner">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div></div>
+        </div>
+      )}
+    </GlobalLoadingContext.Provider>
   );
 };
 
-export default GlobalLoading;
+export const useGlobalLoading = () => {
+  const context = useContext(GlobalLoadingContext);
+  if (!context) {
+    throw new Error('useGlobalLoading must be used within a GlobalLoadingProvider');
+  }
+  return context;
+};

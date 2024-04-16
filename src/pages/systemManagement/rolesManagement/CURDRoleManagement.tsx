@@ -86,48 +86,50 @@ function CRUDRolesManagement() {
   };
 
   const onUpdate = () => {
-    openModal(
-      "confirm",
-      t("common.confirm.title"),
-      t("rolesManagement.confirmUpdate"),
-      () => {
-        setLoading(true);
-        RolesAPI.updateRoles(getValues())
-          .then((response) => {
-            if (
-              response.status &&
-              response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
-            ) {
-              openNotification(
-                "success",
-                t("common.notification.success"),
-                t("rolesManagement.updateSuccess")
-              );
-              back();
-            }
-          })
-          .catch((error) => {
-            if (
-              error.response &&
-              error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-            ) {
-              if (
-                error.response.data &&
-                error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-              ) {
-                openNotification(
-                  "error",
-                  t("common.notification.error"),
-                  error.response.data
-                );
-              }
-            }
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
-    );
+    console.log(getValues());
+    
+    // openModal(
+    //   "confirm",
+    //   t("common.confirm.title"),
+    //   t("rolesManagement.confirmUpdate"),
+    //   () => {
+    //     setLoading(true);
+    //     RolesAPI.updateRoles(getValues())
+    //       .then((response) => {
+    //         if (
+    //           response.status &&
+    //           response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+    //         ) {
+    //           openNotification(
+    //             "success",
+    //             t("common.notification.success"),
+    //             t("rolesManagement.updateSuccess")
+    //           );
+    //           back();
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         if (
+    //           error.response &&
+    //           error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+    //         ) {
+    //           if (
+    //             error.response.data &&
+    //             error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+    //           ) {
+    //             openNotification(
+    //               "error",
+    //               t("common.notification.error"),
+    //               error.response.data
+    //             );
+    //           }
+    //         }
+    //       })
+    //       .finally(() => {
+    //         setLoading(false);
+    //       });
+    //   }
+    // );
   };
 
   const onDelete = () => {

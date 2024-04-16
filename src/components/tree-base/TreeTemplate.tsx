@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tree } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
+import { useController } from 'react-hook-form';
 
 interface TreeTemplateProps {
   data: TreeDataNode[];
@@ -8,26 +9,13 @@ interface TreeTemplateProps {
   control: any;
 }
 
-interface objectDataType {
-  id: string;
-  idParent: string;
-}
-
 const TreeTemplate: React.FC<TreeTemplateProps> = ({ data, name, control }) => {
-  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>(['0-2']);
-  const [objectsData, setObjectData] = useState<objectDataType>();
-
-//   function addMenusToList(menu:TreeDataNode, list:objectDataType[]) {
-//     list.push(menu);
-//     if (menu.children) {
-//         menu.children.forEach(child => {
-//             addMenusToList(child, list);
-//         });
-//     }
-// }
+  const {
+    field: { onChange, value },
+  } = useController({ name, control });
+  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
 
   const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-    console.log(data, checkedKeysValue);
     setCheckedKeys(checkedKeysValue as React.Key[]);
   };
 
@@ -35,8 +23,8 @@ const TreeTemplate: React.FC<TreeTemplateProps> = ({ data, name, control }) => {
     <Tree
       checkable
       autoExpandParent={true}
-      onCheck={onCheck}
-      checkedKeys={checkedKeys}
+      onCheck={onChange}
+      checkedKeys={value}
       treeData={data}
     />
   );

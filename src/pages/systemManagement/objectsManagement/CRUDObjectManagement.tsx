@@ -67,79 +67,138 @@ function CRUDObjectManagement() {
   };
 
   const onCreate = () => {
-    setLoading(true);
-    ObjectsAPI.addObject(getValues())
-      .then((response) => {
-        if (
-          response.status &&
-          response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
-        ) {
-          openNotification(
-            "success",
-            t("common.notification.success"),
-            t("objectsManagement.createSuccess")
-          );
-          back();
-        }
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-        ) {
-          if (
-            error.response.data &&
-            error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-          ) {
-            openNotification(
-              "error",
-              t("common.notification.error"),
-              error.response.data
-            );
-          }
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    openModal(
+      "confirm",
+      t("common.confirm.title"),
+      t("objectsManagement.confirmCreate"),
+      () => {
+        setLoading(true);
+        ObjectsAPI.addObject(getValues())
+          .then((response) => {
+            if (
+              response.status &&
+              response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+            ) {
+              openNotification(
+                "success",
+                t("common.notification.success"),
+                t("objectsManagement.createSuccess")
+              );
+              back();
+            }
+          })
+          .catch((error) => {
+            if (
+              error.response &&
+              error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+            ) {
+              if (
+                error.response.data &&
+                error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+              ) {
+                openNotification(
+                  "error",
+                  t("common.notification.error"),
+                  error.response.data
+                );
+              }
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    );
   };
 
   const onUpdate = () => {
-    setLoading(true);
-    ObjectsAPI.updateObject(getValues())
-      .then((response) => {
-        if (
-          response.status &&
-          response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
-        ) {
-          openNotification(
-            "success",
-            t("common.notification.success"),
-            t("objectsManagement.updateSuccess")
-          );
-          back();
-        }
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-        ) {
-          if (
-            error.response.data &&
-            error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-          ) {
-            openNotification(
-              "error",
-              t("common.notification.error"),
-              error.response.data
-            );
-          }
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    openModal(
+      "confirm",
+      t("common.confirm.title"),
+      t("objectsManagement.confirmUpdate"),
+      () => {
+        setLoading(true);
+        ObjectsAPI.updateObject(getValues())
+          .then((response) => {
+            if (
+              response.status &&
+              response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+            ) {
+              openNotification(
+                "success",
+                t("common.notification.success"),
+                t("objectsManagement.updateSuccess")
+              );
+              back();
+            }
+          })
+          .catch((error) => {
+            if (
+              error.response &&
+              error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+            ) {
+              if (
+                error.response.data &&
+                error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+              ) {
+                openNotification(
+                  "error",
+                  t("common.notification.error"),
+                  error.response.data
+                );
+              }
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    );
+  };
+
+  const onDelete = () => {
+    openModal(
+      "confirm",
+      t("common.confirm.title"),
+      t("objectsManagement.confirmDelete"),
+      () => {
+        setLoading(true);
+        ObjectsAPI.getObjectDelete(getValues("id"))
+          .then((response) => {
+            if (
+              response.status &&
+              response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+            ) {
+              openNotification(
+                "success",
+                t("common.notification.success"),
+                t("objectsManagement.deleteSuccess")
+              );
+              back();
+            }
+          })
+          .catch((error) => {
+            if (
+              error.response &&
+              error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+            ) {
+              if (
+                error.response.data &&
+                error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+              ) {
+                openNotification(
+                  "error",
+                  t("common.notification.error"),
+                  error.response.data
+                );
+              }
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    );
   };
 
   useEffect(() => {
@@ -224,11 +283,7 @@ function CRUDObjectManagement() {
             title={t("objectsManagement.fieldName.name")}
             required={true}
           >
-            <InputTextTemplate
-              mode={mode}
-              name="name"
-              control={control}
-            />
+            <InputTextTemplate mode={mode} name="name" control={control} />
           </FormChildTemplate>
 
           <FormChildTemplate
@@ -340,7 +395,10 @@ function CRUDObjectManagement() {
                 >
                   {t("common.button.update")}
                 </ButtonBase>
-                <ButtonBase className="mx-2 btn btn__delete">
+                <ButtonBase
+                  className="mx-2 btn btn__delete"
+                  onClick={() => onDelete()}
+                >
                   {t("common.button.delete")}
                 </ButtonBase>
               </>

@@ -34,6 +34,11 @@ export const vi = {
       warning: "Cảnh báo",
       info: "Thông báo",
     },
+    confirm: {
+      title: "Thông báo xác nhận",
+      okText: "Đồng ý",
+      cancelText: "Đóng"
+    },
     formSearch: {
       clear: "Clear",
       search: "Tìm kiếm",
@@ -59,6 +64,9 @@ export const vi = {
     createSuccess: "Tạo mới vai trò thành công",
     updateSuccess: "Chỉnh sửa vai trò thành công",
     deleteSuccess: "Xóa vai trò thành công",
+    confirmCreate: "Bạn có chắc chắn muốn thêm vai trò mới không?",
+    confirmUpdate: "Bạn có chắc chắn muốn sửa vai trò không?",
+    confirmDelete: "Bạn có chắc chắn muốn xóa vai trò không?",
     breakcrumb: "Vai trò",
     table: {
       name: "Tên vai trò",
@@ -69,12 +77,7 @@ export const vi = {
       name: "Tên vai trò",
       code: "Mã vai trò",
       type: "Loại vai trò",
-      orderBy: "Vị trí menu",
-      icons: "Icons",
-      url: "Đường dẫn",
-      isStart: "Hoạt động",
-      key: "Key(đa ngôn ngữ)",
-      parentId: "Menu cha",
+      objects: "Phân quyền",
     },
     status: {
       active: "Hoạt động",
@@ -94,6 +97,9 @@ export const vi = {
     createSuccess: "Tạo mới chức năng thành công",
     updateSuccess: "Chỉnh sửa chức năng thành công",
     deleteSuccess: "Xóa chức năng thành công",
+    confirmCreate: "Bạn có chắc chắn muốn thêm chức năng mới không?",
+    confirmUpdate: "Bạn có chắc chắn muốn sửa chức năng không?",
+    confirmDelete: "Bạn có chắc chắn muốn xóa chức năng không?",
     table: {
       name: "Tên chức năng",
       code: "Mã chức năng",

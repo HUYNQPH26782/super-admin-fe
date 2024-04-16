@@ -15,3 +15,4 @@ export const TYPE_MANAGEMENT = {
 };
 
 export type NotificationType = 'success' | 'info' | 'warning' | 'error';
+export type ModalType = 'success' | 'info' | 'warning' | 'error' | 'confirm';

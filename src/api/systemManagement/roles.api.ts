@@ -30,7 +30,7 @@ export class RolesAPI {
 
   static detailRoles = (id: string|number) => {
     return request({
-      method: Method.DELETE,
+      method: Method.GET,
       url: `/${this.COMPONENT_NAME}/${id}`
     })
   }
@@ -39,6 +39,13 @@ export class RolesAPI {
     return request({
       method: Method.DELETE,
       url: `/${this.COMPONENT_NAME}/${id}`
+    })
+  }
+
+  static getAllObjects = () => {
+    return request({
+      method: Method.GET,
+      url: `/${this.COMPONENT_NAME}/get-list-object`
     })
   }
 }

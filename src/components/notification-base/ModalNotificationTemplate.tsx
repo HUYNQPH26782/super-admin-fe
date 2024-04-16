@@ -1,10 +1,11 @@
 import React, { createContext, useContext } from "react";
 import { Modal } from "antd";
-import { NotificationType } from "../../interface/constants/type/Type.const";
+import { ModalType } from "../../interface/constants/type/Type.const";
+import { t } from "i18next";
 
 interface ModalContextType {
   openModal: (
-    type: NotificationType,
+    type: ModalType,
     title: string,
     message: React.ReactNode,
     onOk: Function
@@ -15,7 +16,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalNotificationTemplate: React.FC<any> = ({ children }) => {
   const openModal = (
-    type: NotificationType,
+    type: ModalType,
     title: string,
     message: React.ReactNode,
     onOk: Function
@@ -28,6 +29,8 @@ export const ModalNotificationTemplate: React.FC<any> = ({ children }) => {
           okButtonProps: {
             className: "bg-blue-500",
           },
+          okText: t("common.confirm.okText"),
+          cancelText: t("common.confirm.cancelText"),
           onOk() {
             onOk();
           },
@@ -40,6 +43,8 @@ export const ModalNotificationTemplate: React.FC<any> = ({ children }) => {
           okButtonProps: {
             className: "bg-blue-500",
           },
+          okText: t("common.confirm.okText"),
+          cancelText: t("common.confirm.cancelText"),
           onOk() {
             onOk();
           },
@@ -52,6 +57,8 @@ export const ModalNotificationTemplate: React.FC<any> = ({ children }) => {
           okButtonProps: {
             className: "bg-blue-500",
           },
+          okText: t("common.confirm.okText"),
+          cancelText: t("common.confirm.cancelText"),
           onOk() {
             onOk();
           },
@@ -64,12 +71,27 @@ export const ModalNotificationTemplate: React.FC<any> = ({ children }) => {
           okButtonProps: {
             className: "bg-blue-500",
           },
+          okText: t("common.confirm.okText"),
+          cancelText: t("common.confirm.cancelText"),
           onOk() {
             onOk();
           },
         });
         break;
-
+      case "confirm":
+        Modal.confirm({
+          title: title,
+          content: message,
+          okButtonProps: {
+            className: "bg-blue-500",
+          },
+          okText: t("common.confirm.okText"),
+          cancelText: t("common.confirm.cancelText"),
+          onOk() {
+            onOk();
+          },
+        });
+        break;
       default:
         break;
     }

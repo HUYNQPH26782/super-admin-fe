@@ -7,13 +7,12 @@ import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { t } from "i18next";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
-import { Button, Space, TablePaginationConfig } from "antd";
+import { Button, Space, TablePaginationConfig, Tooltip } from "antd";
 import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import TableTemplate from "../../../components/table-base/TableTemplate";
 import ButtonBase from "../../../components/button-base/ButtonBase";
 import { ROUTER_BASE } from "../../../router/router.constant";
-import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
 import { IObjects } from "../../../interface/response/systemManagement/objects/Objects.interface";
 import { RolesAPI } from "../../../api/systemManagement/roles.api";
 
@@ -25,8 +24,8 @@ function RolesManagementIndex() {
 
   const { control, getValues, setValue } = useForm({
     defaultValues: {
-      code: "",
-      name: "",
+      roleCode: "",
+      roleName: "",
       current: TYPE_MANAGEMENT.DEFAULT_CURRENT,
       size: TYPE_MANAGEMENT.DEFAULT_SIZE,
       total: TYPE_MANAGEMENT.DEFAULT_TOTAL,
@@ -47,7 +46,7 @@ function RolesManagementIndex() {
 
   const fetchData = () => {
     setLoadingTable(true);
-    ObjectsAPI.getObjects(getValues()).then((result: any) => {
+    RolesAPI.getRoles(getValues()).then((result: any) => {
       if (result.data.data && result.data.data.data) {
         dispatch(SetRoles(result.data.data.data));
         setValue("current", result.data.data.currentPage);
@@ -77,7 +76,7 @@ function RolesManagementIndex() {
   const handlePageSizeChange = (value: number) => {
     setValue("size", value);
     setLoadingTable(true);
-    ObjectsAPI.getObjects({size: getValues("size")}).then((result: any) => {
+    RolesAPI.getRoles({size: getValues("size")}).then((result: any) => {
       if (result.data.data && result.data.data.data) {
         dispatch(SetRoles(result.data.data.data));
         setValue("current", result.data.data.currentPage);
@@ -123,16 +122,19 @@ function RolesManagementIndex() {
       key: 'action',
       render: (record: IObjects) => (
         <Space size="middle">
+          <Tooltip title="aaaaaaa">
+            
           <ButtonBase
               onClick={() =>
                 navigate(
-                  `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
+                  `${ROUTER_BASE.roleManagement.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
                 )
               }
               className="mx-2 btn btn__create"
             >
               {t("common.button.detail")}
             </ButtonBase>
+          </Tooltip>
         </Space>
       ),
     },

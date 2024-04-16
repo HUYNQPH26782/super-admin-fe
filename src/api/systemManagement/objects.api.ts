@@ -26,6 +26,13 @@ export class ObjectsAPI {
     });
   }
 
+  static getObjectDelete = (id: string|number) => {
+    return request({
+      method: Method.DELETE,
+      url: `/${this.COMPONENT_NAME}?id=${id}`,
+    });
+  }
+
   static addObject = (data:ObjectsRequest) => {
     return request({
       method: Method.POST,

@@ -4,14 +4,30 @@ import type { TreeDataNode, TreeProps } from 'antd';
 
 interface TreeTemplateProps {
   data: TreeDataNode[];
+  name: string;
+  control: any;
 }
 
-const TreeTemplate: React.FC<TreeTemplateProps> = ({ data }) => {
-  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>(['0-2']);
+interface objectDataType {
+  id: string;
+  idParent: string;
+}
 
+const TreeTemplate: React.FC<TreeTemplateProps> = ({ data, name, control }) => {
+  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>(['0-2']);
+  const [objectsData, setObjectData] = useState<objectDataType>();
+
+//   function addMenusToList(menu:TreeDataNode, list:objectDataType[]) {
+//     list.push(menu);
+//     if (menu.children) {
+//         menu.children.forEach(child => {
+//             addMenusToList(child, list);
+//         });
+//     }
+// }
 
   const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-    console.log('onCheck', checkedKeysValue);
+    console.log(data, checkedKeysValue);
     setCheckedKeys(checkedKeysValue as React.Key[]);
   };
 
@@ -22,7 +38,6 @@ const TreeTemplate: React.FC<TreeTemplateProps> = ({ data }) => {
       onCheck={onCheck}
       checkedKeys={checkedKeys}
       treeData={data}
-      defaultExpandedKeys={['0-0', '0-1']}
     />
   );
 };

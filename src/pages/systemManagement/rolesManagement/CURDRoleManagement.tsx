@@ -27,49 +27,51 @@ function CRUDRolesManagement() {
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
   const [dataObjectForm, setDataObjectForm] = useState<string[]>([]);
 
-  const { control, getValues, watch, reset } = useForm<RolesRequest>({
+  const { control, getValues, watch, reset, setValue } = useForm<RolesRequest>({
     defaultValues: {
       id: "",
       isActive: 1,
       roleName: "",
       roleCode: "",
-      object: []
+      object: [],
     },
   });
-  
+
   const object = watch("object");
 
   useEffect(() => {
     if (object) {
       var treeDataGetForm = new Set<string>();
-      object.forEach(el => {
+      object.forEach((el) => {
         treeDataGetForm.add(el);
         const parentTree = searchParentTreeData(el, treeData);
         if (parentTree != undefined) {
           treeDataGetForm.add(parentTree.key as string);
         }
-      })
+      });
       setDataObjectForm(Array.from(treeDataGetForm));
     }
-  }, [object])
+  }, [object]);
 
-  const searchParentTreeData = (id: string, treeData: TreeDataNode[]): TreeDataNode | undefined => {
+  const searchParentTreeData = (
+    id: string,
+    treeData: TreeDataNode[]
+  ): TreeDataNode | undefined => {
     for (const tree of treeData) {
       if (tree.children) {
-        const childNode = tree.children.find(child => child.key === id); // Tìm kiếm node con có ID khớp
+        const childNode = tree.children.find((child) => child.key === id);
         if (childNode) {
-          return tree; // Trả về node cha nếu tìm thấy node con có ID khớp
+          return tree;
         } else {
-          const found = searchParentTreeData(id, tree.children); // Đệ quy vào các nút con
+          const found = searchParentTreeData(id, tree.children);
           if (found) {
-            return found; // Trả về node cha nếu tìm thấy node con khớp ở các nhánh con
+            return found;
           }
         }
       }
     }
-    return undefined; // Trả về undefined nếu không tìm thấy
-  }
-  
+    return undefined;
+  };
 
   const back = () => {
     navigate(ROUTER_BASE.roleManagement.path);
@@ -82,6 +84,7 @@ function CRUDRolesManagement() {
       t("rolesManagement.confirmCreate"),
       () => {
         setLoading(true);
+        setValue("object", dataObjectForm);
         RolesAPI.createRoles(getValues())
           .then((response) => {
             if (
@@ -121,50 +124,49 @@ function CRUDRolesManagement() {
   };
 
   const onUpdate = () => {
-    console.log(getValues(), dataObjectForm);
-    
-    // openModal(
-    //   "confirm",
-    //   t("common.confirm.title"),
-    //   t("rolesManagement.confirmUpdate"),
-    //   () => {
-    //     setLoading(true);
-    //     RolesAPI.updateRoles(getValues())
-    //       .then((response) => {
-    //         if (
-    //           response.status &&
-    //           response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
-    //         ) {
-    //           openNotification(
-    //             "success",
-    //             t("common.notification.success"),
-    //             t("rolesManagement.updateSuccess")
-    //           );
-    //           back();
-    //         }
-    //       })
-    //       .catch((error) => {
-    //         if (
-    //           error.response &&
-    //           error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-    //         ) {
-    //           if (
-    //             error.response.data &&
-    //             error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-    //           ) {
-    //             openNotification(
-    //               "error",
-    //               t("common.notification.error"),
-    //               error.response.data
-    //             );
-    //           }
-    //         }
-    //       })
-    //       .finally(() => {
-    //         setLoading(false);
-    //       });
-    //   }
-    // );
+    openModal(
+      "confirm",
+      t("common.confirm.title"),
+      t("rolesManagement.confirmUpdate"),
+      () => {
+        setLoading(true);
+        setValue("object", dataObjectForm);
+        RolesAPI.updateRoles(getValues())
+          .then((response) => {
+            if (
+              response.status &&
+              response.status === TYPE_MANAGEMENT.STATUS_SUCCESS
+            ) {
+              openNotification(
+                "success",
+                t("common.notification.success"),
+                t("rolesManagement.updateSuccess")
+              );
+              back();
+            }
+          })
+          .catch((error) => {
+            if (
+              error.response &&
+              error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+            ) {
+              if (
+                error.response.data &&
+                error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_400
+              ) {
+                openNotification(
+                  "error",
+                  t("common.notification.error"),
+                  error.response.data
+                );
+              }
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    );
   };
 
   const onDelete = () => {
@@ -220,7 +222,12 @@ function CRUDRolesManagement() {
     if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
       RolesAPI.detailRoles(id)
         .then((res) => {
-          reset(res.data.data);
+          if (res.data.data && res.data.data.rolesObjectDetailRequests) {
+            res.data.data.object = filteredNodes(res.data.data.rolesObjectDetailRequests).map((el: { idObject: number }) => el.idObject.toString());
+            reset(res.data.data);
+            console.log(res.data.data);
+            
+        }
         })
         .catch((error) => {
           if (
@@ -248,6 +255,13 @@ function CRUDRolesManagement() {
     }
     setLoading(false);
   }, []);
+
+  const filteredNodes = (data: Array<{idParent: number, idObject: number }>) => {
+    return data.filter(obj => {
+      const hasParent = data.some(el => el.idParent === obj.idObject);
+      return !hasParent;
+  });
+  };
 
   const convertData = (data: Array<any>) => {
     return data.map((item) => {
@@ -291,7 +305,10 @@ function CRUDRolesManagement() {
             <InputTextTemplate mode={mode} name="roleName" control={control} />
           </FormChildTemplate>
 
-          <FormChildTemplate title={t("rolesManagement.fieldName.objects")} required={true}>
+          <FormChildTemplate
+            title={t("rolesManagement.fieldName.objects")}
+            required={true}
+          >
             <TreeTemplate data={treeData} name="object" control={control} />
           </FormChildTemplate>
 
@@ -323,8 +340,10 @@ function CRUDRolesManagement() {
                 >
                   {t("common.button.update")}
                 </ButtonBase>
-                <ButtonBase className="mx-2 btn btn__delete"
-                  onClick={() => onDelete()}>
+                <ButtonBase
+                  className="mx-2 btn btn__delete"
+                  onClick={() => onDelete()}
+                >
                   {t("common.button.delete")}
                 </ButtonBase>
               </>

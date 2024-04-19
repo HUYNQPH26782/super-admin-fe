@@ -25,6 +25,7 @@ function CRUDRolesManagement() {
   const { setLoading } = useGlobalLoading();
   const { openModal } = useModalProvider();
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
+  const [dataObjectForm, setDataObjectForm] = useState<string[]>([]);
 
   const { control, getValues, watch, reset } = useForm<RolesRequest>({
     defaultValues: {
@@ -32,9 +33,43 @@ function CRUDRolesManagement() {
       isActive: 1,
       roleName: "",
       roleCode: "",
-      object: ['1']
+      object: []
     },
   });
+  
+  const object = watch("object");
+
+  useEffect(() => {
+    if (object) {
+      var treeDataGetForm = new Set<string>();
+      object.forEach(el => {
+        treeDataGetForm.add(el);
+        const parentTree = searchParentTreeData(el, treeData);
+        if (parentTree != undefined) {
+          treeDataGetForm.add(parentTree.key as string);
+        }
+      })
+      setDataObjectForm(Array.from(treeDataGetForm));
+    }
+  }, [object])
+
+  const searchParentTreeData = (id: string, treeData: TreeDataNode[]): TreeDataNode | undefined => {
+    for (const tree of treeData) {
+      if (tree.children) {
+        const childNode = tree.children.find(child => child.key === id); // Tìm kiếm node con có ID khớp
+        if (childNode) {
+          return tree; // Trả về node cha nếu tìm thấy node con có ID khớp
+        } else {
+          const found = searchParentTreeData(id, tree.children); // Đệ quy vào các nút con
+          if (found) {
+            return found; // Trả về node cha nếu tìm thấy node con khớp ở các nhánh con
+          }
+        }
+      }
+    }
+    return undefined; // Trả về undefined nếu không tìm thấy
+  }
+  
 
   const back = () => {
     navigate(ROUTER_BASE.roleManagement.path);
@@ -86,7 +121,7 @@ function CRUDRolesManagement() {
   };
 
   const onUpdate = () => {
-    console.log(getValues());
+    console.log(getValues(), dataObjectForm);
     
     // openModal(
     //   "confirm",

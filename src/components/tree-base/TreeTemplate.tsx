@@ -13,11 +13,6 @@ const TreeTemplate: React.FC<TreeTemplateProps> = ({ data, name, control }) => {
   const {
     field: { onChange, value },
   } = useController({ name, control });
-  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
-
-  const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-    setCheckedKeys(checkedKeysValue as React.Key[]);
-  };
 
   return (
     <Tree

@@ -3,5 +3,5 @@ export interface RolesRequest {
     roleCode: string,
     roleName: string,
     isActive: number
-    object: Array<String|Number>
+    object: Array<string>
 }

@@ -50,7 +50,13 @@ export const vi = {
         object: {
           menu: "Menu",
           tool: "Tool",
+          api: "API"
         },
+        condition: {
+          no_condition: "Không có điều kiện",
+          use_max: "Lượt dùng tối đa",
+          use_time: "Thời gian sử dụng"
+        }
       },
     },
   },

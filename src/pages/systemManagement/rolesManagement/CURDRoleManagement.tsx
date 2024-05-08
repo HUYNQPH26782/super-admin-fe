@@ -131,6 +131,7 @@ function CRUDRolesManagement() {
       () => {
         setLoading(true);
         setValue("object", dataObjectForm);
+        
         RolesAPI.updateRoles(getValues())
           .then((response) => {
             if (
@@ -225,8 +226,6 @@ function CRUDRolesManagement() {
           if (res.data.data && res.data.data.rolesObjectDetailRequests) {
             res.data.data.object = filteredNodes(res.data.data.rolesObjectDetailRequests).map((el: { idObject: number }) => el.idObject.toString());
             reset(res.data.data);
-            console.log(res.data.data);
-            
         }
         })
         .catch((error) => {
@@ -309,7 +308,7 @@ function CRUDRolesManagement() {
             title={t("rolesManagement.fieldName.objects")}
             required={true}
           >
-            <TreeTemplate data={treeData} name="object" control={control} />
+            <TreeTemplate data={treeData} disabled={mode === TYPE_MANAGEMENT.MODE_DETAIL} name="object" control={control} />
           </FormChildTemplate>
 
           <FormFooterTemplate>

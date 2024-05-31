@@ -3,6 +3,7 @@
 import {
   FunctionComponent,
   PropsWithChildren,
+  memo,
   type ReactElement,
   // ReactElement,
   // useEffect,
@@ -71,4 +72,4 @@ const AuthGuard: FunctionComponent<
   // return <Navigate to="/login" />;
 };
 
-export default AuthGuard;
+export default memo(AuthGuard);

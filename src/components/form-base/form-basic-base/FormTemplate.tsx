@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface FormTemplateProps {
   labelSize: String;
@@ -24,4 +24,4 @@ const FormTemplate: React.FC<FormTemplateProps> = ({
   );
 };
 
-export default FormTemplate;
+export default memo(FormTemplate);

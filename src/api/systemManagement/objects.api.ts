@@ -12,10 +12,17 @@ export class ObjectsAPI {
     });
   };
 
-  static getMenuSelect = (id: string|number|undefined) => {
+  static getMenuSelect = (id: string|number|undefined|null) => {
     return request({
       method: Method.GET,
       url: `/${this.COMPONENT_NAME}/menu-parent?id=${id}`,
+    });
+  };
+
+  static getMenuCreateSelect = () => {
+    return request({
+      method: Method.GET,
+      url: `/${this.COMPONENT_NAME}/menu-parent-create`,
     });
   };
 

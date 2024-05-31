@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { memo } from "react";
 
 const FontAwesomeBase = ({iconName, ...restProps}) => {
     return <>
@@ -7,4 +8,4 @@ const FontAwesomeBase = ({iconName, ...restProps}) => {
     </>
 };
 
-export default FontAwesomeBase;
+export default memo(FontAwesomeBase);

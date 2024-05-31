@@ -1,11 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppConfig } from "../AppConfig";
 import { ROUTER_BASE } from "./router.constant";
-import React from 'react';
+import React, { memo } from 'react';
 import LayoutTemplate from "../components/layout-base/LayoutTemplate";
 import AuthGuard from "../guard/AuthGuard";
 import { TYPE_MANAGEMENT } from "../interface/constants/type/Type.const";
 import GuestGuard from "../guard/GuestGuard";
+import LoginFormTemplate from "../pages/common/login-form";
 
 function RouterRender() {
   return (
@@ -30,7 +31,13 @@ function RouterRender() {
               />
             }
           />
-          {Object.entries(ROUTER_BASE).map(([key, router]) => (
+          <Route
+            path="/login"
+            element={
+              <LoginFormTemplate></LoginFormTemplate>
+            }
+          />
+          {Object.entries(ROUTER_BASE).map(([key, router]) => (            
             React.createElement(Route, { path: router.path, key: router.name, element: (<>
             {router.type === TYPE_MANAGEMENT.AUTH_GUARD ? <>
               <AuthGuard>
@@ -53,4 +60,4 @@ function RouterRender() {
   );
 }
 
-export default RouterRender;
+export default memo(RouterRender);

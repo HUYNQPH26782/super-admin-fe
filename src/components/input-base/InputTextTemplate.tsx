@@ -1,7 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 import { Input } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
 import { TYPE_MANAGEMENT } from "../../interface/constants/type/Type.const";
+import { t } from "i18next";
 
 interface Props {
   name: string;
@@ -31,6 +32,7 @@ const InputTextTemplate: React.FC<Props> = ({
                 <Input
                   {...field}
                   {...restProps}
+                  placeholder={t('common.input.placeholder')}
                   onBlur={(e) => {
                     if (field.value) {
                       field.onChange(field.value.trim());
@@ -46,4 +48,4 @@ const InputTextTemplate: React.FC<Props> = ({
   );
 };
 
-export default InputTextTemplate;
+export default memo(InputTextTemplate);

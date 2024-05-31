@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface FormSearchChildTemplateProps {
     label: String;
@@ -18,4 +18,4 @@ const FormSearchChildTemplate: React.FC<FormSearchChildTemplateProps> = ({label,
   );
 };
 
-export default FormSearchChildTemplate;
+export default memo(FormSearchChildTemplate);

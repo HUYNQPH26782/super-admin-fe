@@ -20,7 +20,7 @@ request.interceptors.request.use(
   (config) => {
     const token = getToken();
     if (config.headers && token) {
-      config.headers["Authorization"] = token;
+      config.headers["sso-token"] = token;
     }
     return config;
   },

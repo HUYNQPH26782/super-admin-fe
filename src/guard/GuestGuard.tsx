@@ -1,4 +1,4 @@
-import { FunctionComponent, PropsWithChildren, ReactElement } from "react";
+import { FunctionComponent, PropsWithChildren, ReactElement, memo } from "react";
 import { Navigate } from "react-router-dom";
 import { getToken } from "../helper/userToken";
 
@@ -14,4 +14,4 @@ const GuestGuard: FunctionComponent<PropsWithChildren<unknown>> = ({
   return <Navigate to="/dashboard" />;
 };
 
-export default GuestGuard;
+export default memo(GuestGuard);

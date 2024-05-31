@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface FormSearchTemplateProps {
     footer: React.ReactNode;
@@ -23,4 +23,4 @@ const FormSearchTemplate: React.FC<FormSearchTemplateProps> = ({
   );
 };
 
-export default FormSearchTemplate;
+export default memo(FormSearchTemplate);

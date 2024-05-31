@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Checkbox } from "antd";
 import { Controller } from "react-hook-form";
 import { TYPE_MANAGEMENT } from "../../interface/constants/type/Type.const";
@@ -31,4 +31,4 @@ const CheckboxTemplate: React.FC<any> = ({
   );
 };
 
-export default CheckboxTemplate;
+export default memo(CheckboxTemplate);

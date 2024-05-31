@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import TableTemplate from "../../../components/table-base/TableTemplate";
 import { t } from "i18next";
@@ -21,7 +21,6 @@ import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate"
 import { GetCodeMng, SetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
 import { CodeMngApi } from "../../../api/common/codeMng.api";
 import { IObjects } from "../../../interface/response/systemManagement/objects/Objects.interface";
-import { useNotification } from "../../../components/notification-base/NotificationTemplate";
 import TagTemplate from "../../../components/tag-base/TagTemplate";
 
 function ObjectsManagementIndex() {
@@ -30,8 +29,6 @@ function ObjectsManagementIndex() {
   const codeMngData = useAppSelector(GetCodeMng);
   const [loading, setLoadingTable] = useState<boolean>(true);
   const dispatch = useAppDispatch();
-
-  const { openNotification } = useNotification();
 
   const { control, getValues, setValue } = useForm({
     defaultValues: {
@@ -247,4 +244,4 @@ function ObjectsManagementIndex() {
   );
 }
 
-export default ObjectsManagementIndex;
+export default memo(ObjectsManagementIndex);

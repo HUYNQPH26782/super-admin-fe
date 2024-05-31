@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -271,4 +271,4 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   );
 };
 
-export default LayoutTemplate;
+export default memo(LayoutTemplate);

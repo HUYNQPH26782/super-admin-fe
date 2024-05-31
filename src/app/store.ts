@@ -5,6 +5,8 @@ import RolesReducer from "./reducers/systemManagement/Roles/Roles.reducer";
 import ObjectsReducer from "./reducers/systemManagement/Objects/Objects.reducer";
 import CodeMngReducer from "./reducers/common/CodeMng/CodeMng.reducer";
 import MenuParentReducer from "./reducers/systemManagement/Objects/MenuParent.reducer";
+import PreimiumReducer from "./reducers/informationManagement/Premium/Preimium.reducer";
+import ObjectGroupReducer from "./reducers/systemManagement/ObjectsGroup/ObjectGroup.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +15,9 @@ export const store = configureStore({
     loading: LoadingReducer,
     roles: RolesReducer,
     objects: ObjectsReducer,
-    menuParent: MenuParentReducer
+    menuParent: MenuParentReducer,
+    premiumList: PreimiumReducer,
+    objectsGroup: ObjectGroupReducer
   },
 });
 

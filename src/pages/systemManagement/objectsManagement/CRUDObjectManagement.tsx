@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { ObjectsRequest } from "../../../interface/request/systemManagement/objects/ObjectsRequest.interface";
 import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
@@ -206,19 +206,20 @@ function CRUDObjectManagement() {
     CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
       dispatch(SetCodeMng(res.data.data));
     });
-    ObjectsAPI.getMenuSelect(id).then((res) => {
-      dispatch(
-        SetMenuParent(
-          res.data.data.map((el: any) => {
-            return {
-              value: el.id,
-              label: `${el.code} - ${t(el.name)}`,
-            };
-          })
-        )
-      );
-    });
     if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
+      ObjectsAPI.getMenuSelect(id).then((res) => {
+        dispatch(
+          SetMenuParent(
+            res.data.data.map((el: any) => {
+              return {
+                value: el.id,
+                label: `${el.code} - ${t(el.name)}`,
+              };
+            })
+          )
+        );
+      });
+
       ObjectsAPI.getObjectDetail(id)
         .then((res) => {
           reset(res.data.data);
@@ -246,6 +247,19 @@ function CRUDObjectManagement() {
         .finally(() => {
           setLoading(false);
         });
+    } else {
+      ObjectsAPI.getMenuCreateSelect().then((res) => {
+        dispatch(
+          SetMenuParent(
+            res.data.data.map((el: any) => {
+              return {
+                value: el.id,
+                label: `${el.code} - ${t(el.name)}`,
+              };
+            })
+          )
+        );
+      });
     }
     setLoading(false);
   }, []);
@@ -413,4 +427,4 @@ function CRUDObjectManagement() {
   );
 }
 
-export default CRUDObjectManagement;
+export default memo(CRUDObjectManagement);

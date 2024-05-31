@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button } from "antd";
 
 const ButtonBase: React.FC<any> = ({  children, onClick, ...restProps }) => {
@@ -15,4 +15,4 @@ const ButtonBase: React.FC<any> = ({  children, onClick, ...restProps }) => {
   );
 };
 
-export default ButtonBase;
+export default memo(ButtonBase);

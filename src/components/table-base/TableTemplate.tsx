@@ -1,7 +1,7 @@
 import { Card, Pagination, Select, Table } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { t } from "i18next";
-import { useState } from "react";
+import { memo, useState } from "react";
 const { Option } = Select;
 
 interface PaginationProps {
@@ -86,4 +86,4 @@ function TableTemplate({
   );
 };
 
-export default TableTemplate;
+export default memo(TableTemplate);

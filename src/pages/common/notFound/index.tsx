@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 function NotFoundTemplate() {
     return (
       <>
@@ -6,5 +8,5 @@ function NotFoundTemplate() {
     );
   }
   
-  export default NotFoundTemplate;
+  export default memo(NotFoundTemplate);
   

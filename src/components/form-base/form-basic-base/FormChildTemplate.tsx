@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface FormChildTemplateProps {
   title: String;
@@ -20,4 +20,4 @@ const FormChildTemplate: React.FC<FormChildTemplateProps> = ({
   );
 };
 
-export default FormChildTemplate;
+export default memo(FormChildTemplate);

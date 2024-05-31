@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 function LoaddingTemplate() {
   return (
     <>
@@ -6,4 +8,4 @@ function LoaddingTemplate() {
   );
 }
 
-export default LoaddingTemplate;
+export default memo(LoaddingTemplate);

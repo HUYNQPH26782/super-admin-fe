@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Radio } from "antd";
 import { Controller } from "react-hook-form";
 
@@ -28,4 +28,4 @@ const RadioTemplate: React.FC<any> = ({
   );
 };
 
-export default RadioTemplate;
+export default memo(RadioTemplate);

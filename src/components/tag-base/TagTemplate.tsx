@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Tag } from "antd";
 
 interface TagTemplateProps {
@@ -20,4 +20,4 @@ const TagTemplate: React.FC<TagTemplateProps> = ({
   );
 };
 
-export default TagTemplate;
+export default memo(TagTemplate);

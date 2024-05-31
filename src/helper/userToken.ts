@@ -7,7 +7,7 @@ export const getToken = (): string => {
 };
 
 export const setToken = (token: string, remember: boolean): void => {
-  remember ? localStorage.setItem("userToken", token) : setCookie("userToken", token, 1);
+  remember ? localStorage.setItem("userToken", token) : setCookie("userToken", token, 1/3);
 };
 
 export const deleteToken = (): void => {

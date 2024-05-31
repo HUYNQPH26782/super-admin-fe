@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Card } from "antd";
 
 const CardLayoutTemplate: React.FC<any> = ({
@@ -20,4 +20,4 @@ const CardLayoutTemplate: React.FC<any> = ({
   );
 };
 
-export default CardLayoutTemplate;
+export default memo(CardLayoutTemplate);

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GetRoles, SetRoles } from "../../../app/reducers/systemManagement/Roles/Roles.reducer";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { t } from "i18next";
@@ -199,4 +199,4 @@ function RolesManagementIndex() {
   );
 }
 
-export default RolesManagementIndex;
+export default memo(RolesManagementIndex);

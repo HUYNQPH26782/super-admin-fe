@@ -1,5 +1,6 @@
 import { Checkbox, CheckboxProps } from "antd";
 import { t } from "i18next";
+import { memo } from "react";
 import { useController } from "react-hook-form";
 const CheckboxGroup = Checkbox.Group;
 
@@ -44,4 +45,4 @@ const ListCheckboxTemplate: React.FC<any> = ({
   );
 };
 
-export default ListCheckboxTemplate;
+export default memo(ListCheckboxTemplate);

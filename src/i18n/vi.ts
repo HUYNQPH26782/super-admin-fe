@@ -22,7 +22,11 @@ export const vi = {
     radiobox: {
       radioboxAll: "Lựa chọn",
     },
+    input: {
+      placeholder: "Nhập dữ liệu...",
+    },
     select: {
+      placeholder: "Lựa chọn",
       selectDefault: "Lựa chọn",
     },
     pagination: {
@@ -58,6 +62,12 @@ export const vi = {
           use_time: "Thời gian sử dụng"
         }
       },
+      login: {
+        error: {
+          isNull: "Tài khoản và mật khẩu không được để trống",
+        },
+        success: "Đăng nhập thành công"
+      }
     },
   },
   titleTable: "Danh sách",
@@ -84,6 +94,42 @@ export const vi = {
       code: "Mã vai trò",
       type: "Loại vai trò",
       objects: "Phân quyền",
+    },
+    status: {
+      active: "Hoạt động",
+      unActive: "Không hoạt động",
+    },
+  },
+  objectGroupManagement: {
+    title: "Quản lý dịch vụ",
+    titleCreate: "[Tạo mới dịch vụ]",
+    titleUpdate: "[Chỉnh sửa dịch vụ]",
+    titleDetail: "[Chi tiết dịch vụ]",
+    createSuccess: "Tạo mới dịch vụ thành công",
+    updateSuccess: "Chỉnh sửa dịch vụ thành công",
+    deleteSuccess: "Xóa dịch vụ thành công",
+    confirmCreate: "Bạn có chắc chắn muốn thêm dịch vụ mới không?",
+    confirmUpdate: "Bạn có chắc chắn muốn sửa dịch vụ không?",
+    confirmDelete: "Bạn có chắc chắn muốn xóa dịch vụ không?",
+    breakcrumb: "Dịch vụ",
+    table: {
+      name: "Tên dịch vụ",
+      code: "Mã dịch vụ",
+      subName: "Mô tả",
+      urlNote: "Url",
+      status: "Trạng thái",
+      roleName: "Thuộc quyền",
+      moduleName: "Thuộc module"
+    },
+    fieldName: {
+      name: "Tên dịch vụ",
+      code: "Mã dịch vụ",
+      subName: "Mô tả",
+      urlNote: "Url",
+      status: "Trạng thái",
+      roleName: "Thuộc quyền",
+      moduleName: "Thuộc module",
+      objects: "Đối tượng"
     },
     status: {
       active: "Hoạt động",
@@ -131,5 +177,45 @@ export const vi = {
       notFound: "Không tìm thấy chức năng"
     }
   },
+  premiumManagement: {
+    title: "Quản lý dịch vụ",
+    titleCreate: "[Tạo mới dịch vụ]",
+    titleUpdate: "[Chỉnh sửa dịch vụ]",
+    titleDetail: "[Chi tiết dịch vụ]",
+    breakcrumb: "Dịch vụ",
+    createSuccess: "Tạo mới dịch vụ thành công",
+    updateSuccess: "Chỉnh sửa dịch vụ thành công",
+    deleteSuccess: "Xóa dịch vụ thành công",
+    confirmCreate: "Bạn có chắc chắn muốn thêm dịch vụ mới không?",
+    confirmUpdate: "Bạn có chắc chắn muốn sửa dịch vụ không?",
+    confirmDelete: "Bạn có chắc chắn muốn xóa dịch vụ không?",
+    table: {
+      name: "Tên dịch vụ",
+      code: "Mã dịch vụ",
+      type: "Loại dịch vụ",
+      role: "Chức vụ",
+      money: "Giá",
+      status: "Trạng thái",
+      note: "Ghi chú",
+    },
+    fieldName: {
+      name: "Tên dịch vụ",
+      code: "Mã dịch vụ",
+      type: "Loại dịch vụ",
+      orderBy: "Vị trí menu",
+      icons: "Icons",
+      url: "Đường dẫn",
+      isStart: "Hoạt động",
+      key: "Key(đa ngôn ngữ)",
+      parentId: "Menu cha",
+    },
+    status: {
+      active: "Hoạt động",
+      unActive: "Không hoạt động",
+    },
+    error: {
+      notFound: "Không tìm thấy dịch vụ"
+    }
+  }
 };
   

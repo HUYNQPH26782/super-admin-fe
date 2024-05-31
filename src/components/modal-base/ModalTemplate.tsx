@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Modal, Button } from 'antd';
 
 export interface ModalTemplateProps {
@@ -23,4 +23,4 @@ const ModalTemplate: React.FC<ModalTemplateProps> = ({ visible, onClose, footerC
   );
 };
 
-export default ModalTemplate;
+export default memo(ModalTemplate);

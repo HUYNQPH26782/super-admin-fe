@@ -1,3 +1,4 @@
+import { memo } from "react";
 import TableTemplate from "../../components/table-base/TableTemplate";
 
 function SystemManagementIndex() {
@@ -8,4 +9,4 @@ function SystemManagementIndex() {
   );
 }
 
-export default SystemManagementIndex;
+export default memo(SystemManagementIndex);

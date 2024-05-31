@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const FormFooterTemplate: React.FC<any> = ({
   children
@@ -12,4 +12,4 @@ const FormFooterTemplate: React.FC<any> = ({
   );
 };
 
-export default FormFooterTemplate;
+export default memo(FormFooterTemplate);

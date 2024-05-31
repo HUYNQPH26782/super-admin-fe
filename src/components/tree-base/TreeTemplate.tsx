@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Tree } from 'antd';
 import type { TreeDataNode } from 'antd';
 import { useController } from 'react-hook-form';
@@ -27,4 +27,4 @@ const TreeTemplate: React.FC<TreeTemplateProps> = ({ data, disabled, name, contr
   );
 };
 
-export default TreeTemplate;
+export default memo(TreeTemplate);

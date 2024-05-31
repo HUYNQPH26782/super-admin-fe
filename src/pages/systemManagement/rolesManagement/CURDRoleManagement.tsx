@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { useGlobalLoading } from "../../../components/global-loading/GlobalLoading";
 import { useModalProvider } from "../../../components/notification-base/ModalNotificationTemplate";
@@ -218,6 +218,8 @@ function CRUDRolesManagement() {
   useEffect(() => {
     setLoading(true);
     RolesAPI.getAllObjects().then((res) => {
+      console.log(res.data.data);
+      
       setTreeData(convertData(res.data.data));
     });
     if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
@@ -357,4 +359,4 @@ function CRUDRolesManagement() {
   );
 }
 
-export default CRUDRolesManagement;
+export default memo(CRUDRolesManagement);

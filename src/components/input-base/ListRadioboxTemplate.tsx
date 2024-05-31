@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Radio, RadioChangeEvent } from "antd";
 import { Controller, useController } from "react-hook-form";
 import { t } from "i18next";
@@ -6,7 +6,7 @@ import { ICodeMng } from "../../interface/response/common/codeMng/CodeMng.interf
 import { TYPE_MANAGEMENT } from "../../interface/constants/type/Type.const";
 
 type Props = {
-  options: ICodeMng[];
+  options: ICodeMng[]|undefined;
   name: string;
   control: any;
   mode?: string;
@@ -41,7 +41,7 @@ const ListRadioboxTemplate: React.FC<Props> = ({
       ) : (
         <></>
       )}
-      {options.map((el: ICodeMng) => (
+      {options && options.map((el: ICodeMng) => (
         <Radio key={el.value} value={el.value} className="text-black">
           {el.label}
         </Radio>
@@ -50,4 +50,4 @@ const ListRadioboxTemplate: React.FC<Props> = ({
   );
 };
 
-export default ListRadioboxTemplate;
+export default memo(ListRadioboxTemplate);

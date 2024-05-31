@@ -1,5 +1,3 @@
-import React from 'react';
-
 export type RouterType = {
   path: string;
   name: string;

@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { CodeMngApi } from "../../../api/common/codeMng.api";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -18,20 +18,22 @@ import {
   SetCodeMng,
 } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
 import ListRadioboxTemplate from "../../../components/input-base/ListRadioboxTemplate";
-import {
-  GetMenuParent,
-} from "../../../app/reducers/systemManagement/Objects/MenuParent.reducer";
+import { GetMenuParent } from "../../../app/reducers/systemManagement/Objects/MenuParent.reducer";
 import { useGlobalLoading } from "../../../components/global-loading/GlobalLoading";
 import { useModalProvider } from "../../../components/notification-base/ModalNotificationTemplate";
 import { PremiumRequest } from "../../../interface/request/informationManagement/PremiumRequest.inteface";
 import { PremiumAPI } from "../../../api/informationManagement/premium.api";
+import FontAwesomeBase from "../../../components/font-awesome/FontAwesomeBase";
+import { ICodeMng } from "../../../interface/response/common/codeMng/CodeMng.interface";
 
 function CRUDPremiumManagement() {
   const navigate = useNavigate();
   const { mode, id } = useParams();
   const { openNotification } = useNotification();
-  const codeMngData = useAppSelector(GetCodeMng);
-  const menuParentData = useAppSelector(GetMenuParent);
+  const [activeList, setActiveList] = useState();
+  const [premiumList, setPremiumList] = useState();
+  const [defaultList, setDefaultList] = useState();
+
   const dispatch = useAppDispatch();
   const { setLoading } = useGlobalLoading();
   const { openModal } = useModalProvider();
@@ -39,30 +41,28 @@ function CRUDPremiumManagement() {
   const { control, getValues, watch, reset } = useForm<PremiumRequest>({
     defaultValues: {
       id: "",
-      name: "1",
+      name: "",
       code: "",
-      money: 0,
+      money: null,
       note: "",
-      level: 1,
+      level: null,
       roleId: "",
-      status: 1,
-    },
+      status: "ACTIVE_TYPE_1",
+      type: "PREMIUM_TYPE_1",
+      isDefault: "DEFAULT_TYPE_1",
+      objectGroup: []
+  },
   });
 
-  const isStatus = [
-    { value: "1", label: t("objectsManagement.status.active") },
-    { value: "0", label: t("objectsManagement.status.unActive") },
-  ];
-
   const back = () => {
-    navigate(ROUTER_BASE.objectManagement.path);
+    navigate(ROUTER_BASE.serviceManagement.path);
   };
 
   const onCreate = () => {
     openModal(
       "confirm",
       t("common.confirm.title"),
-      t("objectsManagement.confirmCreate"),
+      t("premiumManagement.confirmCreate"),
       () => {
         setLoading(true);
         PremiumAPI.addObject(getValues())
@@ -74,7 +74,7 @@ function CRUDPremiumManagement() {
               openNotification(
                 "success",
                 t("common.notification.success"),
-                t("objectsManagement.createSuccess")
+                t("premiumManagement.createSuccess")
               );
               back();
             }
@@ -107,7 +107,7 @@ function CRUDPremiumManagement() {
     openModal(
       "confirm",
       t("common.confirm.title"),
-      t("objectsManagement.confirmUpdate"),
+      t("premiumManagement.confirmUpdate"),
       () => {
         setLoading(true);
         PremiumAPI.updateObject(getValues())
@@ -119,7 +119,7 @@ function CRUDPremiumManagement() {
               openNotification(
                 "success",
                 t("common.notification.success"),
-                t("objectsManagement.updateSuccess")
+                t("premiumManagement.updateSuccess")
               );
               back();
             }
@@ -152,7 +152,7 @@ function CRUDPremiumManagement() {
     openModal(
       "confirm",
       t("common.confirm.title"),
-      t("objectsManagement.confirmDelete"),
+      t("premiumManagement.confirmDelete"),
       () => {
         setLoading(true);
         // PremiumAPI.getObjectDelete(getValues("id"))
@@ -164,7 +164,7 @@ function CRUDPremiumManagement() {
         //       openNotification(
         //         "success",
         //         t("common.notification.success"),
-        //         t("objectsManagement.deleteSuccess")
+        //         t("premiumManagement.deleteSuccess")
         //       );
         //       back();
         //     }
@@ -195,73 +195,16 @@ function CRUDPremiumManagement() {
 
   useEffect(() => {
     setLoading(true);
-    CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
-      dispatch(SetCodeMng(res.data.data));
+    CodeMngApi.getCodeMng("ACTIVE_TYPE,PREMIUM_TYPE,DEFAULT_TYPE").then((res) => {
+      setActiveList(res.data.data.filter((el:ICodeMng) => el.type === "ACTIVE_TYPE"))
+      setDefaultList(res.data.data.filter((el:ICodeMng) => el.type === "DEFAULT_TYPE"))
+      setPremiumList(res.data.data.filter((el:ICodeMng) => el.type === "PREMIUM_TYPE"))
     });
     if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
-      // PremiumAPI.getMenuSelect(id).then((res) => {
-      //   dispatch(
-      //     SetMenuParent(
-      //       res.data.data.map((el: any) => {
-      //         return {
-      //           value: el.id,
-      //           label: `${el.code} - ${t(el.name)}`,
-      //         };
-      //       })
-      //     )
-      //   );
-      // });
-
-      // PremiumAPI.getObjectDetail(id)
-      //   .then((res) => {
-      //     reset(res.data.data);
-      //   })
-      //   .catch((error) => {
-      //     if (
-      //       error.response &&
-      //       error.response.status === TYPE_MANAGEMENT.STATUS_ERROR_400
-      //     ) {
-      //       if (
-      //         error.response.data &&
-      //         error.response.data.status === TYPE_MANAGEMENT.STATUS_ERROR_404
-      //       ) {
-      //         openModal(
-      //           "error",
-      //           t("common.notification.error"),
-      //           t("objectsManagement.error.notFound"),
-      //           () => {
-      //             back();
-      //           }
-      //         );
-      //       }
-      //     }
-      //   })
-      //   .finally(() => {
-      //     setLoading(false);
-      //   });
-    } else {
-      // PremiumAPI.getMenuCreateSelect().then((res) => {
-      //   dispatch(
-      //     SetMenuParent(
-      //       res.data.data.map((el: any) => {
-      //         return {
-      //           value: el.id,
-      //           label: `${el.code} - ${t(el.name)}`,
-      //         };
-      //       })
-      //     )
-      //   );
-      // });
-    }
+      
+    } 
     setLoading(false);
   }, []);
-
-  const filterOption = (
-    input: string,
-    option?: { label: string; value: string }
-  ) => {
-    return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-  };
 
   return (
     <>
@@ -269,67 +212,118 @@ function CRUDPremiumManagement() {
         className="mb-10 mt-8 shadow-md"
         title={
           mode === TYPE_MANAGEMENT.MODE_CREATE
-            ? t("objectsManagement.titleCreate")
+            ? t("premiumManagement.titleCreate")
             : mode === TYPE_MANAGEMENT.MODE_UPDATE
-            ? t("objectsManagement.titleUpdate")
-            : t("objectsManagement.titleDetail")
+            ? t("premiumManagement.titleUpdate")
+            : t("premiumManagement.titleDetail")
         }
       >
         {/* form crud */}
         <FormTemplate contentSize={"70"} labelSize={"30"}>
           {/* content form crud */}
+          
           <FormChildTemplate
-            title={t("objectsManagement.fieldName.code")}
+            title={t("premiumManagement.fieldName.code")}
             required={true}
           >
             <InputTextTemplate mode={mode} name="code" control={control} />
           </FormChildTemplate>
-
+          
           <FormChildTemplate
-            title={t("objectsManagement.fieldName.name")}
+            title={t("premiumManagement.fieldName.name")}
             required={true}
           >
             <InputTextTemplate mode={mode} name="name" control={control} />
           </FormChildTemplate>
 
           <FormChildTemplate
-            title={t("objectsManagement.fieldName.type")}
+            title={t("premiumManagement.fieldName.money")}
+            required={true}
+          >
+            <InputTextTemplate
+              mode={mode}
+              name="money"
+              control={control}
+              type="number"
+            />
+          </FormChildTemplate>
+
+          <FormChildTemplate
+            title={t("premiumManagement.fieldName.type")}
             required={true}
           >
             <ListRadioboxTemplate
               name="type"
               mode={mode}
               control={control}
-              options={codeMngData}
+              options={premiumList}
               isCheck={false}
             />
           </FormChildTemplate>
 
           <FormChildTemplate
-            title={t("objectsManagement.fieldName.url")}
-            required={true}
-          >
-            <InputTextTemplate mode={mode} name="url" control={control} />
-          </FormChildTemplate>
-
-          <FormChildTemplate
-            title={t("objectsManagement.fieldName.isStart")}
+            title={t("premiumManagement.fieldName.isDefault")}
             required={true}
           >
             <ListRadioboxTemplate
-              name="isStart"
+              name="isDefault"
               mode={mode}
               control={control}
-              options={isStatus}
+              options={defaultList}
               isCheck={false}
             />
           </FormChildTemplate>
 
           <FormChildTemplate
-            title={t("objectsManagement.fieldName.key")}
+            title={t("premiumManagement.fieldName.urlNote")}
             required={true}
           >
-            <InputTextTemplate mode={mode} name="key" control={control} />
+            <InputTextTemplate mode={mode} name="urlNote" control={control} />
+          </FormChildTemplate>
+
+          <FormChildTemplate
+            title={t("premiumManagement.fieldName.level")}
+            required={true}
+          >
+            <InputTextTemplate
+              mode={mode}
+              name="level"
+              control={control}
+              type="number"
+            />
+          </FormChildTemplate>
+
+          <FormChildTemplate
+            title={t("premiumManagement.fieldName.role")}
+            required={true}
+          >
+            <InputTextTemplate mode={mode} name="roleId" control={control} />
+          </FormChildTemplate>
+
+          <FormChildTemplate
+            title={t("premiumManagement.fieldName.status")}
+            required={true}
+          >
+            <ListRadioboxTemplate
+              name="status"
+              mode={mode}
+              control={control}
+              options={activeList}
+              isCheck={false}
+            />
+          </FormChildTemplate>
+
+          <FormChildTemplate
+            title={t("premiumManagement.fieldName.objectGroup")}
+            required={true}
+          >
+            <ListRadioboxTemplate
+              name="objectGroup"
+              mode={mode}
+              control={control}
+              options={activeList}
+              isCheck={false}
+            />
           </FormChildTemplate>
 
           <FormFooterTemplate>
@@ -338,17 +332,19 @@ function CRUDPremiumManagement() {
                 className="mx-2 btn btn__create"
                 onClick={() => onCreate()}
               >
+                <FontAwesomeBase className="mr-2" iconName={"plus"} />
                 {t("common.button.create")}
               </ButtonBase>
             ) : mode === TYPE_MANAGEMENT.MODE_DETAIL ? (
               <ButtonBase
                 onClick={() =>
                   navigate(
-                    `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_UPDATE}/${id}`
+                    `${ROUTER_BASE.serviceManagement.path}/${TYPE_MANAGEMENT.MODE_UPDATE}/${id}`
                   )
                 }
                 className="mx-2 btn btn__goToUpdate"
               >
+                <FontAwesomeBase className="mr-2" iconName={"file-pen"} />
                 {t("common.button.goToUpdate")}
               </ButtonBase>
             ) : (
@@ -358,17 +354,23 @@ function CRUDPremiumManagement() {
                   className="mx-2 btn btn__update"
                   onClick={() => onUpdate()}
                 >
+                  <FontAwesomeBase
+                    className="mr-2"
+                    iconName={"pen-to-square"}
+                  />
                   {t("common.button.update")}
                 </ButtonBase>
                 <ButtonBase
                   className="mx-2 btn btn__delete"
                   onClick={() => onDelete()}
                 >
+                  <FontAwesomeBase className="mr-2" iconName={"trash"} />
                   {t("common.button.delete")}
                 </ButtonBase>
               </>
             )}
             <ButtonBase className="mx-2 btn btn__back" onClick={() => back()}>
+              <FontAwesomeBase className="mr-2" iconName={"rotate-left"} />
               {t("common.button.back")}
             </ButtonBase>
           </FormFooterTemplate>

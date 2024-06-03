@@ -9,7 +9,7 @@ const FormSearchChildTemplate: React.FC<FormSearchChildTemplateProps> = ({label,
   return (
     <>
         <div className="grid gap-2 grid-cols-8">
-            <span className="col-span-8">{label}</span>
+            <span className="col-span-8 font-medium">{label}</span>
             <div className="col-span-8">
                 {children}
             </div>

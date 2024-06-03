@@ -11,7 +11,7 @@ const CardLayoutTemplate: React.FC<any> = ({
     <>
       <Card
         className="shadow-md"
-        title={<h1 className="text-lg">{title}</h1>}
+        title={<h1 className="text-lg">{title && (typeof title === 'function' ? title() : title)}</h1>}
         {...restProps}
         extra={active}>
             {children}

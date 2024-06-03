@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -6,7 +6,7 @@ import {
   CaretDownOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Button, ConfigProvider, Dropdown, Layout, Menu, Popover, Segmented, Select } from "antd";
+import { Breadcrumb, Button, Layout, Menu, Popover, Select } from "antd";
 import { useTranslation } from "react-i18next";
 import { LANGUAGES } from "../../interface/constants/languages";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -19,6 +19,7 @@ import 'animate.css';
 import FontAwesomeBase from "../font-awesome/FontAwesomeBase";
 
 const { Header, Content, Sider } = Layout;
+
 interface LayoutTemplateProps {
   children: React.ReactNode;
   title: string;
@@ -35,9 +36,11 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    MenuAPI.getMenu().then((result: any) => {
-      dispatch(SetMenu(result.data));
-    });
+    if (data && data.length == 0) {
+      MenuAPI.getMenu().then((result: any) => {
+        dispatch(SetMenu(result.data));
+      });
+    }
   }, [dispatch]);
 
   const [collapsed, setCollapsed] = useState(false);
@@ -98,46 +101,6 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       icon
     } as MenuItem;
   }
-
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          1st menu item
-        </a>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <Select
-          defaultValue={i18n.language}
-          onChange={onChangeLang}
-          options={LANGUAGES.map(({ code, label }) => ({
-            value: code,
-            label: label,
-          }))}
-        />
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.luohanacademy.com"
-        >
-          3rd menu item
-        </a>
-      ),
-    },
-  ];
 
   return (
     <Layout>

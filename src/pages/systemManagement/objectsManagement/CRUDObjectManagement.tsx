@@ -387,7 +387,7 @@ function CRUDObjectManagement() {
                 className="mx-2 btn btn__create"
                 onClick={() => onCreate()}
               >
-                {t("common.button.create")}
+                <FontAwesomeBase className="mr-2" iconName={"plus"} />{t("common.button.create")}
               </ButtonBase>
             ) : mode === TYPE_MANAGEMENT.MODE_DETAIL ? (
               <ButtonBase
@@ -398,7 +398,7 @@ function CRUDObjectManagement() {
                 }
                 className="mx-2 btn btn__goToUpdate"
               >
-                {t("common.button.goToUpdate")}
+                <FontAwesomeBase className="mr-2" iconName={"file-pen"} />{t("common.button.goToUpdate")}
               </ButtonBase>
             ) : (
               <>
@@ -407,18 +407,18 @@ function CRUDObjectManagement() {
                   className="mx-2 btn btn__update"
                   onClick={() => onUpdate()}
                 >
-                  {t("common.button.update")}
+                  <FontAwesomeBase className="mr-2" iconName={"pen-to-square"} />{t("common.button.update")}
                 </ButtonBase>
                 <ButtonBase
                   className="mx-2 btn btn__delete"
                   onClick={() => onDelete()}
                 >
-                  {t("common.button.delete")}
+                  <FontAwesomeBase className="mr-2" iconName={"trash"} />{t("common.button.delete")}
                 </ButtonBase>
               </>
             )}
             <ButtonBase className="mx-2 btn btn__back" onClick={() => back()}>
-              {t("common.button.back")}
+              <FontAwesomeBase className="mr-2" iconName={"rotate-left"} />{t("common.button.back")}
             </ButtonBase>
           </FormFooterTemplate>
         </FormTemplate>

@@ -3,6 +3,7 @@ import { TYPE_MANAGEMENT } from "../interface/constants/type/Type.const";
 import PremiumManagementIndex from "../pages/informationManagement/premiumManagement";
 import CRUDPremiumManagement from "../pages/informationManagement/premiumManagement/CRUDPremiumManagement";
 import SystemManagementIndex from "../pages/systemManagement";
+import jsonToken from "../pages/systemManagement/jsonToken";
 import ObjectGroupIndex from "../pages/systemManagement/objectsGroup";
 import CRUDObjectGroup from "../pages/systemManagement/objectsGroup/CURDObjectGroup";
 import ObjectsManagementIndex from "../pages/systemManagement/objectsManagement";
@@ -150,6 +151,26 @@ export const ROUTER_BASE = {
     component: CRUDObjectGroup,
   } as RouterType,
 
+  // Objects Group
+  jsonTokenManagement: {
+    path: `${url}/developer/json-token`,
+    name: "objectGroup",
+    type: TYPE_MANAGEMENT.AUTH_GUARD,
+    title: "objectGroupManagement.title",
+    breakcrumb: [
+      {
+        orderBy: 1,
+        name: "developer.breakcrumb",
+        path: `${url}/developer`,
+      },
+      {
+        orderBy: 2,
+        name: "developer.jsonToken.breakcrumb",
+        path: `${url}/developer/json-token`,
+      },
+    ],
+    component: jsonToken,
+  } as RouterType,
   // Service Management
   serviceManagement: {
     path: `${url}/information/premium`,

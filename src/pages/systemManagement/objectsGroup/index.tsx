@@ -6,7 +6,7 @@ import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { t } from "i18next";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
-import { Button, Space, TablePaginationConfig } from "antd";
+import { Space, TablePaginationConfig, Tooltip } from "antd";
 import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
 import TableTemplate from "../../../components/table-base/TableTemplate";
@@ -20,6 +20,7 @@ import { CodeMngApi } from "../../../api/common/codeMng.api";
 import { ICodeMng } from "../../../interface/response/common/codeMng/CodeMng.interface";
 import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
 import ListRadioboxTemplate from "../../../components/input-base/ListRadioboxTemplate";
+import FontAwesomeBase from "../../../components/font-awesome/FontAwesomeBase";
 
 function ObjectGroupIndex() {
   const navigate = useNavigate();
@@ -196,17 +197,19 @@ function ObjectGroupIndex() {
       title: t("common.action"),
       key: 'action',
       render: (record: IObjects) => (
-        <Space size="middle">
-          <ButtonBase
-              onClick={() =>
-                navigate(
-                  `${ROUTER_BASE.objectGroup.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
-                )
-              }
-              className="mx-2 btn btn__create"
-            >
-              {t("common.button.detail")}
+        <Space size="middle">              
+          <Tooltip title={t("common.button.detail")}>
+            <ButtonBase
+                onClick={() =>
+                  navigate(
+                    `${ROUTER_BASE.objectGroup.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
+                  )
+                }
+                className="mx-2 btn btn__table btn__detail"
+              >
+                <FontAwesomeBase iconName={"circle-info"} />
             </ButtonBase>
+          </Tooltip>
         </Space>
       ),
     },
@@ -214,13 +217,18 @@ function ObjectGroupIndex() {
 
   return (
     <>
-      <CardLayoutTemplate title={t("titleSearch")} 
+      <CardLayoutTemplate 
+        title={() => (
+          <>
+            <FontAwesomeBase className="mr-2" iconName={"filter"} /> {t("titleSearch")}
+          </>
+        )}
         className="mb-10 mt-8 shadow-md">
         <FormSearchTemplate
           footer={
             <>
-              <Button className="mx-2">{t('common.formSearch.clear')}</Button>
-              <Button className="mx-2" onClick={() => fetchData()}>{t('common.formSearch.search')}</Button>
+              <ButtonBase className="mx-2 btn__header_form btn__clearFrom"><FontAwesomeBase className="mr-1" iconName={"filter-circle-xmark"} /> {t('common.formSearch.clear')}</ButtonBase>
+              <ButtonBase className="mx-2 btn__header_form btn__search" onClick={() => fetchData()}><FontAwesomeBase className="mr-1" iconName={"magnifying-glass"} />{t('common.formSearch.search')}</ButtonBase>
             </>
           }
         >
@@ -277,7 +285,11 @@ function ObjectGroupIndex() {
       </CardLayoutTemplate>
       
       <TableTemplate
-        title={t("titleTable")}
+        title={() => (
+          <>
+            <FontAwesomeBase className="mr-2" iconName={"list"} /> {t("titleTable")}
+          </>
+        )}
         active={
           <>
             <ButtonBase
@@ -286,9 +298,9 @@ function ObjectGroupIndex() {
                   `${ROUTER_BASE.objectGroup.path}/${TYPE_MANAGEMENT.MODE_CREATE}/0`
                 )
               }
-              className="mx-2 btn btn__create"
+              className="mx-2 btn btn__header__table btn__create"
             >
-              {t("common.button.create")}
+              <FontAwesomeBase className="mr-1" iconName={"plus"} /> {t("common.button.create")}
             </ButtonBase>
           </>
         }

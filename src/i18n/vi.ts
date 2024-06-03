@@ -44,7 +44,7 @@ export const vi = {
       cancelText: "Đóng"
     },
     formSearch: {
-      clear: "Clear",
+      clear: "Hủy tìm kiếm",
       search: "Tìm kiếm",
     },
   },
@@ -178,44 +178,53 @@ export const vi = {
     }
   },
   premiumManagement: {
-    title: "Quản lý dịch vụ",
-    titleCreate: "[Tạo mới dịch vụ]",
-    titleUpdate: "[Chỉnh sửa dịch vụ]",
-    titleDetail: "[Chi tiết dịch vụ]",
-    breakcrumb: "Dịch vụ",
-    createSuccess: "Tạo mới dịch vụ thành công",
-    updateSuccess: "Chỉnh sửa dịch vụ thành công",
-    deleteSuccess: "Xóa dịch vụ thành công",
-    confirmCreate: "Bạn có chắc chắn muốn thêm dịch vụ mới không?",
-    confirmUpdate: "Bạn có chắc chắn muốn sửa dịch vụ không?",
-    confirmDelete: "Bạn có chắc chắn muốn xóa dịch vụ không?",
+    title: "Quản lý gói dịch vụ",
+    titleCreate: "[Tạo mới gói dịch vụ]",
+    titleUpdate: "[Chỉnh sửa gói dịch vụ]",
+    titleDetail: "[Chi tiết gói dịch vụ]",
+    breakcrumb: "Gói dịch vụ",
+    createSuccess: "Tạo mới gói dịch vụ thành công",
+    updateSuccess: "Chỉnh sửa gói dịch vụ thành công",
+    deleteSuccess: "Xóa gói dịch vụ thành công",
+    confirmCreate: "Bạn có chắc chắn muốn thêm gói dịch vụ mới không?",
+    confirmUpdate: "Bạn có chắc chắn muốn sửa gói dịch vụ không?",
+    confirmDelete: "Bạn có chắc chắn muốn xóa gói dịch vụ không?",
     table: {
-      name: "Tên dịch vụ",
-      code: "Mã dịch vụ",
-      type: "Loại dịch vụ",
+      name: "Tên gói dịch vụ",
+      code: "Mã gói dịch vụ",
+      type: "Loại gói dịch vụ",
       role: "Chức vụ",
       money: "Giá",
       status: "Trạng thái",
       note: "Ghi chú",
     },
     fieldName: {
-      name: "Tên dịch vụ",
-      code: "Mã dịch vụ",
-      type: "Loại dịch vụ",
-      orderBy: "Vị trí menu",
-      icons: "Icons",
-      url: "Đường dẫn",
-      isStart: "Hoạt động",
-      key: "Key(đa ngôn ngữ)",
-      parentId: "Menu cha",
+      name: "Tên gói dịch vụ",
+      code: "Mã gói dịch vụ",
+      money: "Giá tiền",
+      type: "Loại gói",
+      isDefault: "Mặc định",
+      urlNote: "Url điều khoản",
+      level: "Vị trí",
+      role: "Đối tượng truy cập",
+      status: "Trạng thái",
+      objectGroup: "Chọn dịch vụ"
     },
     status: {
       active: "Hoạt động",
       unActive: "Không hoạt động",
     },
     error: {
-      notFound: "Không tìm thấy dịch vụ"
+      notFound: "Không tìm thấy gói dịch vụ"
     }
-  }
+  },
+  developer: {
+    breakcrumb: "Developer",
+    jsonToken: {
+      breakcrumb: "Json token",
+      title: "Define Token",
+      title2: "Gen Token",
+    }
+  },
 };
   

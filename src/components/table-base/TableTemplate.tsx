@@ -2,6 +2,7 @@ import { Card, Pagination, Select, Table } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { t } from "i18next";
 import { memo, useState } from "react";
+import FontAwesomeBase from "../font-awesome/FontAwesomeBase";
 const { Option } = Select;
 
 interface PaginationProps {
@@ -50,7 +51,7 @@ function TableTemplate({
     <>
       <Card
         className="shadow-md"
-        title={<h1 className="text-lg">{title}</h1>}
+        title={<h1 className="text-lg">{title && (typeof title === 'function' ? title() : title)}</h1>}
         extra={active}>
         <Table
           size="small"

@@ -1,11 +1,15 @@
 
 export interface PremiumRequest {
-    id: string|number;
-    name: string;
-    code: string;
-    money: number;
-    level: number;
-    note: string;
-    roleId: string;
-    status: number;
+    id?: string|number;
+    name?: string;
+    code?: string;
+    money?: number|null;
+    level?: number|null;
+    note?: string;
+    roleId?: string;
+    status?: string;
+    type?: string;
+    isDefault?: string;
+    urlNote?:string;
+    objectGroup?: string[]
 }

@@ -6,7 +6,16 @@ import {
   CaretDownOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Button, Layout, Menu, Popover, Select } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Drawer,
+  Layout,
+  Menu,
+  Popover,
+  Row,
+  Select,
+} from "antd";
 import { useTranslation } from "react-i18next";
 import { LANGUAGES } from "../../interface/constants/languages";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -15,7 +24,8 @@ import { MenuAPI } from "../../api/common/menu.api";
 import type { IMenu } from "../../interface/Menu.interface";
 import { Link } from "react-router-dom";
 import { BreakcrumbType } from "../../interface/constants/router/RouterType.type";
-import 'animate.css';
+import "animate.css";
+import "./index.css";
 import FontAwesomeBase from "../font-awesome/FontAwesomeBase";
 
 const { Header, Content, Sider } = Layout;
@@ -44,6 +54,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   }, [dispatch]);
 
   const [collapsed, setCollapsed] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const { i18n, t } = useTranslation();
 
@@ -56,9 +67,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       if (el.childId && el.childId.length > 0) {
         return getItem(
           <Link to={el.url ?? ""}>
-            <span style={{ marginLeft: 15, marginRight: 15 }}>
-              {el.name}
-            </span>
+            <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
           </Link>,
           el.url + "",
           buildMenuTree(el.childId),
@@ -68,9 +77,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       if (el.parentId == null) {
         return getItem(
           <Link to={el.url ?? ""}>
-            <span style={{ marginLeft: 15, marginRight: 15 }}>
-              {el.name}
-            </span>
+            <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
           </Link>,
           el.url + "",
           undefined,
@@ -79,11 +86,9 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       }
       return getItem(
         <Link to={el.url ?? ""}>
-          <span style={{ marginLeft: 15, marginRight: 15 }}>
-            {el.name}
-          </span>
+          <span style={{ marginLeft: 15, marginRight: 15 }}>{el.name}</span>
         </Link>,
-        el.url + "",
+        el.url + ""
       );
     });
   }
@@ -98,46 +103,77 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
       key,
       children,
       label,
-      icon
+      icon,
     } as MenuItem;
   }
 
   return (
-    <Layout>
+    <Layout className="min-h-svh">
+      <Drawer
+        id="drawer_ui"
+        title={false}
+        placement={"left"}
+        closable={false}
+        onClose={() => setVisible(false)}
+        open={visible}
+        key={"left"}
+        width={250}
+        style={{ background: "#fff", overflowX: "hidden" }}
+      >
+        <Layout
+          id="layout_drawer"
+          style={{ background: "#fff", overflowX: "hidden" }}
+          className={` bg-white layout-dashboard`}
+        >
+          <Row className="flex justify-center align-middle mt-5 pb-8">
+            <div className="brand text-center">
+              <Link to="/" className="active">
+                <img
+                  src="https://img.pikbest.com/origin/09/28/36/57MpIkbEsTcKf.png!w700wp"
+                  alt=""
+                />
+              </Link>
+            </div>
+          </Row>
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            items={buildMenuTree(data)}
+          />
+        </Layout>
+      </Drawer>
       <Sider
+        id="sider_ui"
         trigger={null}
         collapsible
         collapsed={collapsed}
         className="shadow-md"
         style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
           background: "#ffff",
         }}
       >
-        <div>
-          <img
-            src="https://img.pikbest.com/origin/09/28/36/57MpIkbEsTcKf.png!w700wp"
-            alt=""
+        <div
+          style={{
+            width: collapsed ? "80px" : "200px",
+            position: "fixed",
+            top: 0,
+            transition: "all 0.2s",
+          }}
+        >
+          <div>
+            <img
+              src="https://img.pikbest.com/origin/09/28/36/57MpIkbEsTcKf.png!w700wp"
+              alt=""
+            />
+          </div>
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            items={buildMenuTree(data)}
           />
         </div>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={buildMenuTree(data)}
-        />
       </Sider>
-      <Layout
-        style={
-          collapsed
-            ? { marginLeft: 80, transition: "all 0.2s,background 0s" }
-            : { marginLeft: 200, transition: "all 0.2s" }
-        }
-      >
+      <Layout>
         <Header
           className="shadow-md"
           style={{
@@ -153,36 +189,60 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
             justifyContent: "space-between",
           }}
         >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 45,
-              height: 45,
-              margin: "5px 0 ",
-            }}
-          />
+          <div>
+            {/* show sider */}
+            <Button
+              type="text"
+              id="btn__sider"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 45,
+                height: 45,
+                margin: "5px 0 ",
+              }}
+            />
+            {/* show drawer */}
+            <Button
+              type="text"
+              id="btn__drawer"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setVisible(true)}
+              style={{
+                fontSize: "16px",
+                width: 45,
+                height: 45,
+                margin: "5px 0 ",
+              }}
+            />
+          </div>
           <div style={{ marginRight: 15 }}>
             <span>
-          <Popover placement="bottomRight" title={null} content={<>
-            <Select
-              defaultValue={i18n.language}
-              onChange={onChangeLang}
-              options={LANGUAGES.map(({ code, label }) => ({
-                value: code,
-                label: label,
-              }))}
-            />
-          </>}>
-            <CaretDownOutlined />
-          </Popover>
+              <Popover
+                placement="bottomRight"
+                title={null}
+                content={
+                  <>
+                    <Select
+                      defaultValue={i18n.language}
+                      onChange={onChangeLang}
+                      options={LANGUAGES.map(({ code, label }) => ({
+                        value: code,
+                        label: label,
+                      }))}
+                    />
+                  </>
+                }
+              >
+                <CaretDownOutlined />
+              </Popover>
             </span>
           </div>
         </Header>
 
-        <Content className={`animate__animated animate__bounceInRight my-[30px] mx-[40px] h-screen"`}
+        <Content
+          className={`animate__animated animate__bounceInRight my-[30px] mx-[40px] h-screen"`}
         >
           <div
             style={{
@@ -226,8 +286,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
               })}
             </Breadcrumb>
           </div>
-          <div>
-          {children}</div>
+          <div>{children}</div>
         </Content>
       </Layout>
     </Layout>

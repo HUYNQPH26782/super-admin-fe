@@ -36,10 +36,11 @@ function TableTemplate({
 }: TableTemplateProps) {
   const [pageSize, setPageSize] = useState<number>(paginationProp.size);
   const [current, setCurrent] = useState<number>(paginationProp.current);
-
+   
   const sizeChange = (value: number) => {
     setPageSize(value);
     handlePageSizeChange(value);
+    setCurrent(0);
   };
 
   const paginationChange = (page: number) => {
@@ -66,7 +67,7 @@ function TableTemplate({
         <div className="flex justify-center mt-5">
           <Pagination
             className="mr-3"
-            total={paginationProp.total}
+            total={paginationProp.total * pageSize}
             showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
             pageSize={pageSize}
             current={current}

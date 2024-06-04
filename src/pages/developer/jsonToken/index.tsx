@@ -5,23 +5,30 @@ import { t } from "i18next";
 import { Col, Row } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import ButtonBase from "../../../components/button-base/ButtonBase";
+import { JsonTokenApi } from "../../../api/developer/jsonToken.api";
 
 function JsonTokenIndex() {
   
   const [textAreaValue, setTextAreaValue] = useState("");
+
+  const [jsonShowDiv, setJsonShowDiv] = useState({});
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTextAreaValue(e.target.value);
   };
 
   const handleDecodeClick = () => {
-    console.log(textAreaValue);
+    JsonTokenApi.decodeToken(textAreaValue).then((res) => {
+      if (res.data) {
+        setJsonShowDiv(res.data.data);
+      }
+    })
   };
 
   return (
     <>
-      <Row>
-        <Col xxl={12} xl={24} sm={24} className="mt-8 ">
+      <Row className="justify-between" gutter={16}>
+        <Col xxl={12} xl={24} sm={24} className="mt-8">
           <CardLayoutTemplate 
             title={() => (
               <>
@@ -30,8 +37,9 @@ function JsonTokenIndex() {
             )}
             className="w-full shadow-md min-h-full">
             <TextArea 
-              placeholder="textarea with clear icon" 
+              placeholder="Token write in here..." 
               allowClear 
+              className="h-64"
               value={textAreaValue} 
               onChange={handleTextAreaChange} 
             />
@@ -42,7 +50,7 @@ function JsonTokenIndex() {
             </div>
           </CardLayoutTemplate>
         </Col>
-        <Col xxl={12} xl={24} sm={24} className="mt-8 ">
+        <Col xxl={12} xl={24} sm={24} className="mt-8">
           <CardLayoutTemplate 
             title={() => (
               <>
@@ -50,8 +58,10 @@ function JsonTokenIndex() {
               </>
             )}
             className="w-full shadow-md min-h-full">
-                <div className=" w-full min-h-48 border-2 border-sky-500">
-
+                <div className={`w-full min-h-64 p-8 border-2 ${jsonShowDiv ? 'border-sky-500' : 'border-red-500'}`}>
+                  <pre className="whitespace-pre-wrap break-all">
+                    {jsonShowDiv ? JSON.stringify(jsonShowDiv, null, 2) : "Token is not valid..."}
+                  </pre>
                 </div>
           </CardLayoutTemplate>
         </Col>

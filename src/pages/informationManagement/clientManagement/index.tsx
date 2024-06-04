@@ -1,41 +1,32 @@
-import { memo, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import TableTemplate from "../../../components/table-base/TableTemplate";
-import { t } from "i18next";
-import ButtonBase from "../../../components/button-base/ButtonBase";
 import { useNavigate } from "react-router-dom";
-import { ROUTER_BASE } from "../../../router/router.constant";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { GetRoles, SetRoles } from "../../../app/reducers/systemManagement/Roles/Roles.reducer";
+import { memo, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
-import { ObjectsAPI } from "../../../api/systemManagement/objects.api";
-import {
-  GetObjects,
-  SetObjects,
-} from "../../../app/reducers/systemManagement/Objects/Objects.reducer";
+import { t } from "i18next";
 import CardLayoutTemplate from "../../../components/layout-base/CardLayoutTemplate";
 import FormSearchTemplate from "../../../components/form-base/form-search-base/FormSearchTemplate";
 import { Space, TablePaginationConfig, Tooltip } from "antd";
 import FormSearchChildTemplate from "../../../components/form-base/form-search-base/FormSearchChildTemplate";
 import InputTextTemplate from "../../../components/input-base/InputTextTemplate";
-import { useForm } from "react-hook-form";
-import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
-import { GetCodeMng, SetCodeMng } from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
-import { CodeMngApi } from "../../../api/common/codeMng.api";
+import TableTemplate from "../../../components/table-base/TableTemplate";
+import ButtonBase from "../../../components/button-base/ButtonBase";
+import { ROUTER_BASE } from "../../../router/router.constant";
 import { IObjects } from "../../../interface/response/systemManagement/objects/Objects.interface";
-import TagTemplate from "../../../components/tag-base/TagTemplate";
+import { RolesAPI } from "../../../api/systemManagement/roles.api";
 import FontAwesomeBase from "../../../components/font-awesome/FontAwesomeBase";
 
-function ObjectsManagementIndex() {
+function ClientManagementIndex() {
   const navigate = useNavigate();
-  const data = useAppSelector(GetObjects);
-  const codeMngData = useAppSelector(GetCodeMng);
+  const data = useAppSelector(GetRoles);
   const [loading, setLoadingTable] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
   const { control, getValues, setValue } = useForm({
     defaultValues: {
-      code: "",
-      name: "",
-      type: "",
+      roleCode: "",
+      roleName: "",
       current: TYPE_MANAGEMENT.DEFAULT_CURRENT,
       size: TYPE_MANAGEMENT.DEFAULT_SIZE,
       total: TYPE_MANAGEMENT.DEFAULT_TOTAL,
@@ -44,12 +35,51 @@ function ObjectsManagementIndex() {
     },
   });
 
+  const handlePageChange = (
+    pagination: TablePaginationConfig,
+    sorter: any,
+    extra: any
+  ) => {
+    setValue("sortType", extra.order ? extra.order.slice(0, -3) : "");
+    setValue("sortField", extra.field);
+    fetchData();
+  };
+
+  const fetchData = () => {
+    setLoadingTable(true);
+    RolesAPI.getRoles(getValues()).then((result: any) => {
+      if (result.data.data && result.data.data.data) {
+        dispatch(SetRoles(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
+    });
+  };
+
+  useEffect(() => {
+    setLoadingTable(true);
+    RolesAPI.getRoles({}).then((result: any) => {
+      if (result.data.data && result.data.data.data) {
+        console.log(result.data.data.data);
+        
+        dispatch(SetRoles(result.data.data.data));
+        setValue("current", result.data.data.currentPage);
+        setValue("total", result.data.data.totalPages);
+      }
+    }).finally(() => {
+      setLoadingTable(false);
+    });
+    setLoadingTable(false);
+  }, []);
+
   const handlePageSizeChange = (value: number) => {
     setValue("size", value);
     setLoadingTable(true);
-    ObjectsAPI.getObjects({size: getValues("size")}).then((result: any) => {
+    RolesAPI.getRoles({size: getValues("size")}).then((result: any) => {
       if (result.data.data && result.data.data.data) {
-        dispatch(SetObjects(result.data.data.data));
+        dispatch(SetRoles(result.data.data.data));
         setValue("current", result.data.data.currentPage);
         setValue("total", result.data.data.totalPages);
       }
@@ -63,53 +93,6 @@ function ObjectsManagementIndex() {
     fetchData();
   };
 
-  const fetchData = () => {
-    setLoadingTable(true);
-    ObjectsAPI.getObjects(getValues()).then((result: any) => {
-      if (result.data.data && result.data.data.data) {
-        dispatch(SetObjects(result.data.data.data));
-        setValue("current", result.data.data.currentPage);
-        setValue("total", result.data.data.totalPages);
-      }
-    }).finally(() => {
-      setLoadingTable(false);
-    });
-  };
-
-  const handlePageChange = (
-    pagination: TablePaginationConfig,
-    sorter: any,
-    extra: any
-  ) => {
-    console.log(extra);
-    setValue("sortType", extra.order ? extra.order.slice(0, -3) : "");
-    setValue("sortField", extra.field);
-    fetchData();
-  };
-
-  useEffect(() => {
-    setLoadingTable(true);
-    ObjectsAPI.getObjects({}).then((result: any) => {
-      if (result.data.data && result.data.data.data) {
-        console.log(result.data.data.data);
-        
-        dispatch(SetObjects(result.data.data.data));
-        setValue("current", result.data.data.currentPage);
-        setValue("total", result.data.data.totalPages);
-      }
-    }).finally(() => {
-      setLoadingTable(false);
-    });
-    
-    CodeMngApi.getCodeMng("OBJECT_TYPE").then((res) => {
-      if (res.data.data) {
-        res.data.data.unshift({ value: "", label: t('common.select.selectDefault') });
-      }
-      dispatch(SetCodeMng(res.data.data))
-    })
-    setLoadingTable(false);
-  }, []);
-
   const columns = [
     {
       title: t("common.rowNum"),
@@ -121,67 +104,37 @@ function ObjectsManagementIndex() {
         getValues("current") * getValues("size") + index + 1,
     },
     {
-      title: t("objectsManagement.table.name"),
-      dataIndex: "name",
-      key: "name",
+      title: t("rolesManagement.table.name"),
+      dataIndex: "roleName",
+      key: "roleName",
       sorter: true,
       showSorterTooltip: false,
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: t("objectsManagement.table.code"),
-      dataIndex: "code",
-      key: "code",
+      title: t("rolesManagement.table.code"),
+      dataIndex: "roleCode",
+      key: "roleCode",
       sorter: true,
       showSorterTooltip: false,
-    },
-    {
-      title: t("objectsManagement.table.key"),
-      dataIndex: "key",
-      key: "key",
-      sorter: true,
-      showSorterTooltip: false,
-    },
-    {
-      title: t("objectsManagement.table.type"),
-      dataIndex: "type",
-      key: "type",
-      sorter: true,
-      showSorterTooltip: false,
-      render: (data: string) => `${t(data)}`,
-    },
-    {
-      title: t("objectsManagement.table.isStart"),
-      dataIndex: "isStart",
-      key: "isStart",
-      sorter: true,
-      showSorterTooltip: false,
-      render: (data: number) => { return (<>
-          {data === 1 ? <TagTemplate color="cyan">
-            {t("objectsManagement.status.active")}
-        </TagTemplate> : <TagTemplate color="red">
-            {t("objectsManagement.status.unActive")}
-        </TagTemplate> }
-      </>)
-      },
     },
     {
       title: t("common.action"),
       key: 'action',
       render: (record: IObjects) => (
-        <Space size="middle">        
-        <Tooltip title={t("common.button.detail")}>
-          <ButtonBase
-              onClick={() =>
-                navigate(
-                  `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
-                )
-              }
-              className="mx-2 btn btn__table btn__detail"
-            >
-              <FontAwesomeBase iconName={"circle-info"} />
-          </ButtonBase>
-        </Tooltip>
+        <Space size="middle">
+          <Tooltip title={t("common.button.detail")}>
+            <ButtonBase
+                onClick={() =>
+                  navigate(
+                    `${ROUTER_BASE.roleManagement.path}/${TYPE_MANAGEMENT.MODE_DETAIL}/${record.id}`
+                  )
+                }
+                className="mx-2 btn btn__table btn__detail"
+              >
+                <FontAwesomeBase iconName={"circle-info"} />
+            </ButtonBase>
+          </Tooltip>
         </Space>
       ),
     },
@@ -195,7 +148,7 @@ function ObjectsManagementIndex() {
             <FontAwesomeBase className="mr-2" iconName={"filter"} /> {t("titleSearch")}
           </>
         )}
-         className="mb-10 mt-8 shadow-md">
+        className="mb-10 mt-8 shadow-md">
         <FormSearchTemplate
           footer={
             <>
@@ -204,27 +157,18 @@ function ObjectsManagementIndex() {
             </>
           }
         >
-          <FormSearchChildTemplate label={t("objectsManagement.table.name")}>
+          <FormSearchChildTemplate label={t("rolesManagement.table.name")}>
             <InputTextTemplate
               control={control}
               name="name"
             ></InputTextTemplate>
           </FormSearchChildTemplate>
 
-          <FormSearchChildTemplate label={t("objectsManagement.table.code")}>
+          <FormSearchChildTemplate label={t("rolesManagement.table.code")}>
             <InputTextTemplate
               control={control}
               name="code"
             ></InputTextTemplate>
-          </FormSearchChildTemplate>
-
-          <FormSearchChildTemplate label={t("objectsManagement.table.type")}>
-            <SelectBoxTemplate
-              className="w-full"
-              name="type"
-              control={control}
-              options={codeMngData}
-            />
           </FormSearchChildTemplate>
         </FormSearchTemplate>
       </CardLayoutTemplate>
@@ -239,7 +183,7 @@ function ObjectsManagementIndex() {
             <ButtonBase
               onClick={() =>
                 navigate(
-                  `${ROUTER_BASE.objectManagement.path}/${TYPE_MANAGEMENT.MODE_CREATE}/0`
+                  `${ROUTER_BASE.roleManagement.path}/${TYPE_MANAGEMENT.MODE_CREATE}/0`
                 )
               }
               className="mx-2 btn btn__header__table btn__create"
@@ -264,4 +208,4 @@ function ObjectsManagementIndex() {
   );
 }
 
-export default memo(ObjectsManagementIndex);
+export default memo(ClientManagementIndex);

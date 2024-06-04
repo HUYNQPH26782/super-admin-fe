@@ -9,13 +9,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_BASE } from "../../../router/router.constant";
 import { t } from "i18next";
 import { useNotification } from "../../../components/notification-base/NotificationTemplate";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect } from "react";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { useGlobalLoading } from "../../../components/global-loading/GlobalLoading";
 import { useModalProvider } from "../../../components/notification-base/ModalNotificationTemplate";
 import { RolesRequest } from "../../../interface/request/systemManagement/roles/RolesRequest.interface";
-import TreeTemplate from "../../../components/tree-base/TreeTemplate";
-import { TreeDataNode } from "antd";
 import { RolesAPI } from "../../../api/systemManagement/roles.api";
 import FontAwesomeBase from "../../../components/font-awesome/FontAwesomeBase";
 
@@ -25,8 +23,6 @@ function CRUDRolesManagement() {
   const { openNotification } = useNotification();
   const { setLoading } = useGlobalLoading();
   const { openModal } = useModalProvider();
-  const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
-  const [dataObjectForm, setDataObjectForm] = useState<string[]>([]);
 
   const { control, getValues, watch, reset, setValue } = useForm<RolesRequest>({
     defaultValues: {
@@ -34,45 +30,8 @@ function CRUDRolesManagement() {
       isActive: 1,
       roleName: "",
       roleCode: "",
-      object: [],
     },
   });
-
-  const object = watch("object");
-
-  useEffect(() => {
-    if (object) {
-      var treeDataGetForm = new Set<string>();
-      object.forEach((el) => {
-        treeDataGetForm.add(el);
-        const parentTree = searchParentTreeData(el, treeData);
-        if (parentTree != undefined) {
-          treeDataGetForm.add(parentTree.key as string);
-        }
-      });
-      setDataObjectForm(Array.from(treeDataGetForm));
-    }
-  }, [object]);
-
-  const searchParentTreeData = (
-    id: string,
-    treeData: TreeDataNode[]
-  ): TreeDataNode | undefined => {
-    for (const tree of treeData) {
-      if (tree.children) {
-        const childNode = tree.children.find((child) => child.key === id);
-        if (childNode) {
-          return tree;
-        } else {
-          const found = searchParentTreeData(id, tree.children);
-          if (found) {
-            return found;
-          }
-        }
-      }
-    }
-    return undefined;
-  };
 
   const back = () => {
     navigate(ROUTER_BASE.roleManagement.path);
@@ -85,7 +44,6 @@ function CRUDRolesManagement() {
       t("rolesManagement.confirmCreate"),
       () => {
         setLoading(true);
-        setValue("object", dataObjectForm);
         RolesAPI.createRoles(getValues())
           .then((response) => {
             if (
@@ -131,7 +89,6 @@ function CRUDRolesManagement() {
       t("rolesManagement.confirmUpdate"),
       () => {
         setLoading(true);
-        setValue("object", dataObjectForm);
         
         RolesAPI.updateRoles(getValues())
           .then((response) => {
@@ -218,16 +175,11 @@ function CRUDRolesManagement() {
 
   useEffect(() => {
     setLoading(true);
-    RolesAPI.getAllObjects().then((res) => {
-      console.log(res.data.data);
-      
-      setTreeData(convertData(res.data.data));
-    });
-    if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
+    
+    if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id) {
       RolesAPI.detailRoles(id)
         .then((res) => {
-          if (res.data.data && res.data.data.rolesObjectDetailRequests) {
-            res.data.data.object = filteredNodes(res.data.data.rolesObjectDetailRequests).map((el: { idObject: number }) => el.idObject.toString());
+          if (res.data.data) {
             reset(res.data.data);
         }
         })
@@ -258,26 +210,6 @@ function CRUDRolesManagement() {
     setLoading(false);
   }, []);
 
-  const filteredNodes = (data: Array<{idParent: number, idObject: number }>) => {
-    return data.filter(obj => {
-      const hasParent = data.some(el => el.idParent === obj.idObject);
-      return !hasParent;
-  });
-  };
-
-  const convertData = (data: Array<any>) => {
-    return data.map((item) => {
-      const newItem: TreeDataNode = {
-        title: `${item.code} - ${item.name} - ${t(item.type)}`,
-        key: `${item.id}`,
-      };
-      if (item.childId.length > 0) {
-        newItem.children = convertData(item.childId);
-      }
-      return newItem;
-    });
-  };
-
   return (
     <>
       <CardLayoutTemplate
@@ -305,13 +237,6 @@ function CRUDRolesManagement() {
             required={true}
           >
             <InputTextTemplate mode={mode} name="roleName" control={control} />
-          </FormChildTemplate>
-
-          <FormChildTemplate
-            title={t("rolesManagement.fieldName.objects")}
-            required={true}
-          >
-            <TreeTemplate data={treeData} disabled={mode === TYPE_MANAGEMENT.MODE_DETAIL} name="object" control={control} />
           </FormChildTemplate>
 
           <FormFooterTemplate>

@@ -56,6 +56,10 @@ export const vi = {
           tool: "Tool",
           api: "API"
         },
+        status: {
+          active: "Hoạt động",
+          unActive: "Không hoạt động"
+        },
         condition: {
           no_condition: "Không có điều kiện",
           use_max: "Lượt dùng tối đa",
@@ -157,6 +161,7 @@ export const vi = {
       code: "Mã chức năng",
       type: "Loại chức năng",
       isStart: "Hoạt động",
+      key: "Key(đa ngôn ngữ)",
     },
     fieldName: {
       name: "Tên chức năng",
@@ -223,7 +228,7 @@ export const vi = {
     jsonToken: {
       breakcrumb: "Json token",
       title: "Define Token",
-      title2: "Gen Token",
+      title2: "Decode Token",
     }
   },
 };

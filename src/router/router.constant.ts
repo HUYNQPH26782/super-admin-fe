@@ -3,13 +3,15 @@ import { TYPE_MANAGEMENT } from "../interface/constants/type/Type.const";
 import PremiumManagementIndex from "../pages/informationManagement/premiumManagement";
 import CRUDPremiumManagement from "../pages/informationManagement/premiumManagement/CRUDPremiumManagement";
 import SystemManagementIndex from "../pages/systemManagement";
-import jsonToken from "../pages/systemManagement/jsonToken";
+import jsonToken from "../pages/developer/jsonToken";
 import ObjectGroupIndex from "../pages/systemManagement/objectsGroup";
 import CRUDObjectGroup from "../pages/systemManagement/objectsGroup/CURDObjectGroup";
 import ObjectsManagementIndex from "../pages/systemManagement/objectsManagement";
 import CRUDObjectManagement from "../pages/systemManagement/objectsManagement/CRUDObjectManagement";
 import RolesManagementIndex from "../pages/systemManagement/rolesManagement";
 import CRUDRolesManagement from "../pages/systemManagement/rolesManagement/CURDRoleManagement";
+import staffManagement from "../pages/informationManagement/staffManagement";
+import clientManagement from "../pages/informationManagement/clientManagement";
 
 const url = "/supper-admin";
 
@@ -212,4 +214,45 @@ export const ROUTER_BASE = {
     component: CRUDPremiumManagement,
   } as RouterType,
 
+  // Staff Management
+  staffManagement: {
+    path: `${url}/information/staff-info`,
+    name: "staffManagement",
+    type: TYPE_MANAGEMENT.AUTH_GUARD,
+    title: "premiumManagement.title",
+    breakcrumb: [
+      {
+        orderBy: 1,
+        name: "systemManagement.breakcrumb",
+        path: `${url}/information`,
+      },
+      {
+        orderBy: 2,
+        name: "premiumManagement.breakcrumb",
+        path: `${url}/information/staff-info`,
+      },
+    ],
+    component: staffManagement,
+  } as RouterType,
+  
+  // Client Management
+  clientManagement: {
+    path: `${url}/information/client-info`,
+    name: "clientManagement",
+    type: TYPE_MANAGEMENT.AUTH_GUARD,
+    title: "premiumManagement.title",
+    breakcrumb: [
+      {
+        orderBy: 1,
+        name: "systemManagement.breakcrumb",
+        path: `${url}/information`,
+      },
+      {
+        orderBy: 2,
+        name: "premiumManagement.breakcrumb",
+        path: `${url}/information/client-info`,
+      },
+    ],
+    component: clientManagement,
+  } as RouterType,
 };

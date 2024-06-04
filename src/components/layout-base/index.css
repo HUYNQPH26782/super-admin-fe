@@ -1,0 +1,33 @@
+#drawer_ui .ant-drawer-body {
+    padding: 0;
+}
+
+#drawer_ui, .ant-drawer-content-wrapper, .ant-drawer-mask, .ant-drawer {
+    display: none;
+}
+
+#btn__sider {
+    display: block;
+}
+
+#btn__drawer {
+    display: none;
+}
+
+@media (max-width: 1025px) {
+    #drawer_ui, .ant-drawer-content-wrapper, .ant-drawer-mask, .ant-drawer, #button_sider {
+        display: block;
+    }
+    
+    #sider_ui {
+        display: none;
+    }
+
+    #btn__sider {
+        display: none;
+    }
+    
+    #btn__drawer {
+        display: block;
+    }
+}

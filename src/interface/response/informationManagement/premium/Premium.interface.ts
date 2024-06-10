@@ -2,7 +2,7 @@ import { IBase } from "../../../Base.interface";
 
 export interface IPremium extends IBase {
     
-    id?: number;
+    id?: string;
     code?: string;
     createBy?: string;
     createDate?: string;
@@ -16,4 +16,12 @@ export interface IPremium extends IBase {
     parentId?: string;
     type?: string;
     url?: string;
+}
+
+export interface IObjectGroup extends IBase {
+    id: string;
+    code: string;
+    name: string;
+    subName: string;
+    status: string;
 }

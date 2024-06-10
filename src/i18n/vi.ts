@@ -194,6 +194,7 @@ export const vi = {
     confirmCreate: "Bạn có chắc chắn muốn thêm gói dịch vụ mới không?",
     confirmUpdate: "Bạn có chắc chắn muốn sửa gói dịch vụ không?",
     confirmDelete: "Bạn có chắc chắn muốn xóa gói dịch vụ không?",
+    btnSelect: "Chọn",
     table: {
       name: "Tên gói dịch vụ",
       code: "Mã gói dịch vụ",
@@ -214,6 +215,22 @@ export const vi = {
       role: "Đối tượng truy cập",
       status: "Trạng thái",
       objectGroup: "Chọn dịch vụ"
+    },
+    modalObjectGroup: {
+      title: "Chọn dịch vụ",
+      table: {
+        name: "Tên dịch vụ",
+        code: "Mã dịch vụ",
+        subName: "Tiêu đều phụ",
+        status: "Trạng thái"
+      },
+      fieldSearch: {
+        name: "Tên dịch vụ",
+        code: "Mã dịch vụ",
+        subName: "Tiêu đề phụ"
+      },
+      select: "Chọn",
+      noSelect: "Bỏ chọn"
     },
     status: {
       active: "Hoạt động",

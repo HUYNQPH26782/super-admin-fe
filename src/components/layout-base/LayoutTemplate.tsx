@@ -59,7 +59,7 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
   const { i18n, t } = useTranslation();
 
   const onChangeLang = (langCode: string) => {
-    i18n.changeLanguage(langCode, undefined);
+    i18n.changeLanguage("en", undefined);
   };
 
   function buildMenuTree(menuList: IMenu[]): MenuItem[] {
@@ -224,14 +224,6 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
                 title={null}
                 content={
                   <>
-                    <Select
-                      defaultValue={i18n.language}
-                      onChange={onChangeLang}
-                      options={LANGUAGES.map(({ code, label }) => ({
-                        value: code,
-                        label: label,
-                      }))}
-                    />
                   </>
                 }
               >
@@ -239,6 +231,15 @@ const LayoutTemplate: React.FC<LayoutTemplateProps> = ({
               </Popover>
             </span>
           </div>
+          
+          <Select
+                      defaultValue={i18n.language}
+                      onChange={onChangeLang}
+                      options={LANGUAGES.map(({ code, label }) => ({
+                        value: code,
+                        label: label,
+                      }))}
+                    />
         </Header>
 
         <Content

@@ -1,3 +1,4 @@
+import { IObjectGroup } from "../../response/informationManagement/premium/Premium.interface";
 
 export interface PremiumRequest {
     id?: string|number;
@@ -11,5 +12,5 @@ export interface PremiumRequest {
     type?: string;
     isDefault?: string;
     urlNote?:string;
-    objectGroup?: string[]
+    objectGroup: IObjectGroup[]
 }

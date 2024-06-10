@@ -12,6 +12,21 @@ export class PremiumAPI {
     });
   };
 
+  static getAllRoles = () => {
+    return request({
+      method: Method.GET,
+      url: `/${this.COMPONENT_NAME}/all-role`,
+    });
+  };
+  
+  static getAllObjectGroup = (filter:any) => {
+    return request({
+      method: Method.POST,
+      url: `/${this.COMPONENT_NAME}/all-object-group`,
+      data: filter
+    });
+  };
+
   static addObject = (data:PremiumRequest) => {
     return request({
       method: Method.POST,

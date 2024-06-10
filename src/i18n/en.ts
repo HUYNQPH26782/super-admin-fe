@@ -49,8 +49,8 @@ export const en = {
       },
     },
   },
-  titleTable: "Danh sách",
-  titleSearch: "Tìm kiếm",
+  titleTable: "List",
+  titleSearch: "Search",
   rolesManagement: {
     title: "System roles",
     titleCreate: "[Tạo mới vai trò]",

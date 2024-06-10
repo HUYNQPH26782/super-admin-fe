@@ -1,12 +1,7 @@
 import React, { memo } from "react";
 import { Tag } from "antd";
 
-interface TagTemplateProps {
-  children: React.ReactNode;
-  color: string;
-}
-
-const TagTemplate: React.FC<TagTemplateProps> = ({
+const TagTemplate: React.FC<any> = ({
   children,
   color,
   ...restProps

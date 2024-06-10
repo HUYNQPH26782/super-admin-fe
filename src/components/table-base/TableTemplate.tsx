@@ -60,6 +60,7 @@ function TableTemplate({
           dataSource={dataSource}
           columns={columns}
           pagination={false}
+          rowKey="rowNumber"
           onChange={onChange}
           loading={loading}
           {...restProps}

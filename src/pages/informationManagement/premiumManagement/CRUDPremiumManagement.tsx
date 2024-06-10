@@ -12,19 +12,17 @@ import { useNotification } from "../../../components/notification-base/Notificat
 import { memo, useEffect, useState } from "react";
 import { TYPE_MANAGEMENT } from "../../../interface/constants/type/Type.const";
 import { CodeMngApi } from "../../../api/common/codeMng.api";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  GetCodeMng,
-  SetCodeMng,
-} from "../../../app/reducers/common/CodeMng/CodeMng.reducer";
 import ListRadioboxTemplate from "../../../components/input-base/ListRadioboxTemplate";
-import { GetMenuParent } from "../../../app/reducers/systemManagement/Objects/MenuParent.reducer";
 import { useGlobalLoading } from "../../../components/global-loading/GlobalLoading";
 import { useModalProvider } from "../../../components/notification-base/ModalNotificationTemplate";
 import { PremiumRequest } from "../../../interface/request/informationManagement/PremiumRequest.inteface";
 import { PremiumAPI } from "../../../api/informationManagement/premium.api";
 import FontAwesomeBase from "../../../components/font-awesome/FontAwesomeBase";
 import { ICodeMng } from "../../../interface/response/common/codeMng/CodeMng.interface";
+import SelectBoxTemplate from "../../../components/input-base/SelectBoxTemplate";
+import TagTemplate from "../../../components/tag-base/TagTemplate";
+import ModalObjectGroup from "./popup/ModalObjectGroup";
+import { IObjectGroup } from "../../../interface/response/informationManagement/premium/Premium.interface";
 
 function CRUDPremiumManagement() {
   const navigate = useNavigate();
@@ -33,8 +31,9 @@ function CRUDPremiumManagement() {
   const [activeList, setActiveList] = useState();
   const [premiumList, setPremiumList] = useState();
   const [defaultList, setDefaultList] = useState();
+  const [roleList, setRoleList] = useState();
+  const [showModal, setShowModal] = useState(false);
 
-  const dispatch = useAppDispatch();
   const { setLoading } = useGlobalLoading();
   const { openModal } = useModalProvider();
 
@@ -200,14 +199,49 @@ function CRUDPremiumManagement() {
       setDefaultList(res.data.data.filter((el:ICodeMng) => el.type === "DEFAULT_TYPE"))
       setPremiumList(res.data.data.filter((el:ICodeMng) => el.type === "PREMIUM_TYPE"))
     });
+    PremiumAPI.getAllRoles().then((res) => {
+      setRoleList(res.data.data.map((el:any) => {
+        return {
+          value: el.id,
+          label: el.name
+        }
+      }));
+    })
     if (mode !== TYPE_MANAGEMENT.MODE_CREATE && id && id !== "0") {
       
     } 
     setLoading(false);
   }, []);
 
+  const handleClose = (id:string|number|undefined|null) => {
+    console.log('Tag closed! ', id);
+    // Bạn có thể thêm các hành động khác ở đây
+  };
+
+  const onCloseModal = () => {
+    setShowModal(false);
+  }
+
+  const onOpentModal = () => {
+    if (!getValues("roleId")) {
+      openNotification(
+        "error",
+        t("common.notification.error"),
+        "Bạn phải chọn quyền truy cập trước"
+      );
+      return;
+    }
+    setShowModal(true);
+  }
+
+  const onOk = () => {
+    console.log(getValues());
+    onCloseModal();
+  }
+
   return (
     <>
+      {(showModal ) && <><ModalObjectGroup control={control} name="objectGroup" onOk={onOk} visible={showModal} getValues={getValues} onClose={onCloseModal}></ModalObjectGroup> </>}
       <CardLayoutTemplate
         className="mb-10 mt-8 shadow-md"
         title={
@@ -297,7 +331,12 @@ function CRUDPremiumManagement() {
             title={t("premiumManagement.fieldName.role")}
             required={true}
           >
-            <InputTextTemplate mode={mode} name="roleId" control={control} />
+            <SelectBoxTemplate
+              className="w-full"
+              name="roleId"
+              control={control}
+              options={roleList}
+            />
           </FormChildTemplate>
 
           <FormChildTemplate
@@ -305,7 +344,7 @@ function CRUDPremiumManagement() {
             required={true}
           >
             <ListRadioboxTemplate
-              name="status"
+              name="objectGroup"
               mode={mode}
               control={control}
               options={activeList}
@@ -317,13 +356,18 @@ function CRUDPremiumManagement() {
             title={t("premiumManagement.fieldName.objectGroup")}
             required={true}
           >
-            <ListRadioboxTemplate
-              name="objectGroup"
-              mode={mode}
-              control={control}
-              options={activeList}
-              isCheck={false}
-            />
+            <ButtonBase onClick={() => onOpentModal()} className="">
+              {t("premiumManagement.btnSelect")}
+            </ButtonBase>
+            <br/>
+            <div className="mt-2">
+              {
+                getValues("objectGroup") && getValues("objectGroup").map((el:IObjectGroup) => (<>
+                  <TagTemplate key={el.id} closeIcon={<FontAwesomeBase className="ml-1 text-sm" iconName={"xmark"} />} onClose={() => handleClose(el.id)}>
+                    {el.code} - {el.name}
+                  </TagTemplate></>))
+              }
+            </div>
           </FormChildTemplate>
 
           <FormFooterTemplate>
